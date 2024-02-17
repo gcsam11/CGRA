@@ -1,10 +1,10 @@
 # CG 2023/2024
 
-## Group T0xG0y
+## Group T07G09
 | Name             | Number    | E-Mail             |
 | ---------------- | --------- | ------------------ |
-| John Doe         | 201901010 | ...                |
-| Jane Doe         | 201901011 | ...                |
+| Gonçalo Martins  | 202108707 | up202108707@up.pt  |
+| Tomás Alves Moreira | 202108858 | up202108858@up.pt |
 
 ----
 
