@@ -1,9 +1,9 @@
 import { CGFobject } from '../lib/CGF.js';
 import { MyDiamond } from "./MyDiamond.js";
-import { MyParallelogram } from "./myParallelogram.js";
-import { MyTriangle } from "./myTriangle.js";
-import { MyTriangleBig } from "./myTriangleBig.js";
-import { MyTriangleSmall } from "./myTriangleSmall.js";
+import { MyParallelogram } from "./MyParallelogram.js";
+import { MyTriangle } from "./MyTriangle.js";
+import { MyTriangleBig } from "./MyTriangleBig.js";
+import { MyTriangleSmall } from "./MyTriangleSmall.js";
 /**
  * scene
  * @constructor
