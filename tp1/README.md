@@ -9,4 +9,4 @@
 
 - In exercise 2 we struggled to get the big triangle in a different color so that both triangles could be distinguished while taking the screenshot.
 
-![Screenshot 1](screenshots/cg-t07g09-tp1-1.png)
+![Screenshot 1](../screenshots/cg-t07g09-tp1-1.png)
