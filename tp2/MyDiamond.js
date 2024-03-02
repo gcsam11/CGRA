@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import {CGFobject, CGFscene} from '../lib/CGF.js';
-=======
 import {CGFobject} from '../lib/CGF.js';
->>>>>>> 10c25dffa18bef9959ff6c823fc2643153dbf7ff
 /**
  * MyDiamond
  * @constructor

@@ -1,9 +1,9 @@
 import { CGFobject } from '../lib/CGF.js';
 import { MyDiamond } from "./MyDiamond.js";
-import { MyParallelogram } from "./MyParallelogram.js";
-import { MyTriangle } from "./MyTriangle.js";
-import { MyTriangleBig } from "./MyTriangleBig.js";
-import { MyTriangleSmall } from "./MyTriangleSmall.js";
+import { MyParallelogram } from "./myParallelogram.js";
+import { MyTriangle } from "./myTriangle.js";
+import { MyTriangleBig } from "./myTriangleBig.js";
+import { MyTriangleSmall } from "./myTriangleSmall.js";
 /**
  * scene
  * @constructor
@@ -35,14 +35,14 @@ export class MyTangram extends CGFobject {
             this.scene.translate(2,0,2);
             this.scene.rotate((Math.PI)/4,0,1,0);
             this.scene.setDiffuse(0, 255, 0);
-            this.scene.diamond.display();
+            this.diamond.display();
             this.scene.popMatrix();
 
             this.scene.pushMatrix();
             this.scene.translate(2,0,0.6);
             this.scene.rotate(3*Math.PI/4,0,1,0);
             this.scene.setDiffuse(0, 0, 255);
-            this.scene.triangleSmall.display();
+            this.triangleSmall.display();
             this.scene.popMatrix();
 
             this.scene.pushMatrix();
@@ -50,13 +50,13 @@ export class MyTangram extends CGFobject {
             this.scene.translate(1.3,0,1.5);
             this.scene.rotate(Math.PI/4,0,1,0);
             this.scene.setDiffuse(120, 255, 0);
-            this.scene.parallelogram.display();
+            this.parallelogram.display();
             this.scene.popMatrix();
 
             this.scene.pushMatrix();
             this.scene.translate(-0.11,0,-0.08);
             this.scene.rotate(-Math.PI/4,0,1,0);
-            this.scene.triangleBig.display();
+            this.triangleBig.display();
             this.scene.popMatrix();
             
             
@@ -64,7 +64,7 @@ export class MyTangram extends CGFobject {
             this.scene.translate(-1.52,0,-0.08)
             this.scene.rotate(-3*Math.PI/4,0,1,0);
             this.scene.setDiffuse(0, 255, 230);
-            this.scene.triangle.display();
+            this.triangle.display();
             this.scene.popMatrix();
 
             this.scene.pushMatrix();
@@ -72,14 +72,14 @@ export class MyTangram extends CGFobject {
             this.scene.translate(1.52,0,1.33);
             this.scene.rotate(-Math.PI/4,0,1,0);
             this.scene.setDiffuse(0, 120, 255);
-            this.scene.triangleBig.display();
+            this.triangleBig.display();
             this.scene.popMatrix();
 
             this.scene.pushMatrix();
             this.scene.translate(-2.21,0,2.02);
             this.scene.rotate(-3*Math.PI/4,0,1,0);
             this.scene.setDiffuse(120, 0, 20);
-            this.scene.triangleSmall.display();
+            this.triangleSmall.display();
             this.scene.popMatrix();
 
     }

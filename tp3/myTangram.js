@@ -11,14 +11,24 @@ import { MyTriangleSmall } from "../tp2/myTriangleSmall.js";
 export class MyTangram extends CGFobject {
     constructor(scene) {
         super(scene);
-        this.initBuffers();
         this.diamond = new MyDiamond(this.scene);
         this.triangle = new MyTriangle(this.scene);
         this.triangleBig = new MyTriangleBig(this.scene);
         this.triangleSmall = new MyTriangleSmall(this.scene);
         this.parallelogram = new MyParallelogram(this.scene);
+        this.initBuffers();
     }
 
+    initBuffers(){
+        this.vertices = [];
+        this.indices = [];
+        this.normals = [];
+    }
+
+    updateBuffers(complexity){
+		this.initBuffers()
+		this.initNormalVizBuffers();
+	}
 
     display() {
 
