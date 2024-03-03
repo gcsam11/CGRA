@@ -51,7 +51,7 @@ export class MyScene extends CGFscene {
     this.displayTriangleSmall = true;
     this.displayTriangleBig = true;
     this.displaytangram = true;
-    this.displayUnitCube = false;
+    this.displayUnitCube = true;
     this.displayQuad = true;
     this.displayCubeQuad = true;
     this.scaleFactor = 1;
@@ -114,117 +114,10 @@ export class MyScene extends CGFscene {
 
     this.multMatrix(sca);
 
-    // ---- BEGIN Primitive drawing section
-
-    /*if(this.displayDiamond){
-      this.pushMatrix()
-      this.translate(2,0,2);
-      this.rotate((Math.PI)/4,0,1,0);
-      this.diamond.display();
-      this.popMatrix();
-    }
-
-    if(this.displayTriangleSmall){
-      this.pushMatrix();
-      this.translate(2,0,0.6);
-      this.rotate(3*Math.PI/4,0,1,0);
-      this.triangleSmall.display();
-      this.popMatrix();
-    }
-
-    if(this.displayParallelogram){
-      this.pushMatrix();
-      this.scale(1,1,-1);
-      this.translate(1.3,0,1.5);
-      this.rotate(Math.PI/4,0,1,0);
-      this.parallelogram.display();
-      this.popMatrix();
-    }
-
-    if(this.displayTriangleBig){
-      this.pushMatrix();
-      this.translate(-0.11,0,-0.08);
-      this.rotate(-Math.PI/4,0,1,0);
-      this.triangleBig.display();
-      this.popMatrix();
-    }
-
-    if(this.displayTriangle){
-      this.pushMatrix();
-      this.translate(-1.52,0,-0.08)
-      this.rotate(-3*Math.PI/4,0,1,0);
-      this.triangle.display();
-      this.popMatrix();
-    }
-
-    if(this.displayTriangleBig){
-      this.pushMatrix();
-      this.scale(-1,1,1)
-      this.translate(1.52,0,1.33);
-      this.rotate(-Math.PI/4,0,1,0);
-      this.triangleBig.display();
-      this.popMatrix();
-    }
-
-    if(this.displayTriangleSmall){
-      this.pushMatrix();
-      this.translate(-2.21,0,2.02);
-      this.rotate(-3*Math.PI/4,0,1,0);
-      this.triangleSmall.display();
-      this.popMatrix();
-    }*/
-
     if(this.displaytangram){
       this.translate(0.1,0,0);
       this.tangram.display();
     }
-
-    /*if(this.displayQuad){
-      this.pushMatrix();
-      this.translate(-0.124, -3.53, 4);
-      this.scale(7, 7, 7);
-      this.quad.display();
-      this.popMatrix();
-    }
-    if(this.displayQuad){
-      this.pushMatrix();
-      this.translate(-0.124, -3.53, -3);
-      this.scale(7, 7, 7);
-      this.quad.display();
-      this.popMatrix();
-    }
-    if(this.displayQuad){
-      this.pushMatrix();
-      this.rotate(Math.PI/2, 0,1,0);
-      this.translate(-0.5, -3.53, 3.376);
-      this.scale(7, 7, 7);
-      this.quad.display();
-      this.popMatrix();
-    }
-    if(this.displayQuad){
-      this.pushMatrix();
-      this.rotate(Math.PI/2, 0,1,0);
-      this.translate(-0.5, -3.53, -3.62);
-      this.scale(7, 7, 7);
-      this.quad.display();
-      this.popMatrix();
-    }
-    if(this.displayQuad){
-      this.pushMatrix();
-      this.rotate(-Math.PI/2, 1,0,0);
-      this.translate(-0.124, -0.490, -0.025);
-      this.scale(7, 7, 7);
-      this.quad.display();
-      this.popMatrix();
-    }
-    if(this.displayQuad){
-      this.pushMatrix();
-      this.rotate(-Math.PI/2, 1,0,0);
-      this.translate(-0.124, -0.490, -7);
-      this.scale(7, 7, 7);
-      this.quad.display();
-      this.popMatrix();
-    }*/
 
     if(this.displayCubeQuad){
       this.cubeQuad.display();

@@ -1,9 +1,9 @@
 import { CGFobject } from '../lib/CGF.js';
 import { MyDiamond } from "./MyDiamond.js";
-import { MyParallelogram } from "./myParallelogram.js";
-import { MyTriangle } from "./myTriangle.js";
-import { MyTriangleBig } from "./myTriangleBig.js";
-import { MyTriangleSmall } from "./myTriangleSmall.js";
+import { MyParallelogram } from "../tp2/myParallelogram.js";
+import { MyTriangle } from "../tp2/myTriangle.js";
+import { MyTriangleBig } from "../tp2/myTriangleBig.js";
+import { MyTriangleSmall } from "../tp2/myTriangleSmall.js";
 /**
  * scene
  * @constructor
@@ -11,16 +11,27 @@ import { MyTriangleSmall } from "./myTriangleSmall.js";
 export class MyTangram extends CGFobject {
     constructor(scene) {
         super(scene);
-        this.initBuffers();
         this.diamond = new MyDiamond(this.scene);
         this.triangle = new MyTriangle(this.scene);
         this.triangleBig = new MyTriangleBig(this.scene);
         this.triangleSmall = new MyTriangleSmall(this.scene);
         this.parallelogram = new MyParallelogram(this.scene);
+        this.initBuffers();
+    }
+
+    initBuffers(){
+        this.vertices = [];
+        this.indices = [];
+        this.normals = [];
     }
 
 
-    display() {
+    updateBuffers(complexity){
+		this.initBuffers()
+		this.initNormalVizBuffers();
+	}
+
+    display(enableViz) {
 
             this.scene.pushMatrix();
             let translationMatrix = [1, 0, 0, 0,
@@ -30,6 +41,21 @@ export class MyTangram extends CGFobject {
             ]
 
             this.scene.multMatrix(translationMatrix)
+
+            if(enableViz){
+                this.diamond.enableNormalViz();
+                this.triangle.enableNormalViz();
+                this.triangleBig.enableNormalViz();
+                this.triangleSmall.enableNormalViz();
+                this.parallelogram.enableNormalViz();
+            }
+            else{
+                this.diamond.disableNormalViz();
+                this.triangle.disableNormalViz();
+                this.triangleBig.disableNormalViz();
+                this.triangleSmall.disableNormalViz();
+                this.parallelogram.disableNormalViz();
+            }
 
             this.scene.pushMatrix()
             this.scene.translate(2,0,2);
@@ -58,7 +84,6 @@ export class MyTangram extends CGFobject {
             this.scene.rotate(-Math.PI/4,0,1,0);
             this.triangleBig.display();
             this.scene.popMatrix();
-            
             
             this.scene.pushMatrix();
             this.scene.translate(-1.52,0,-0.08)
