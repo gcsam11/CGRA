@@ -16,12 +16,24 @@ export class MyTriangleBig extends CGFobject {
 			-2, 0, 0, 	//0
 			0, 0, -2,	//1
 			2, 0, 0,	//2
+			-2, 0, 0, 	//3
+			0, 0, -2,	//4
+			2, 0, 0,	//5
 		];
 
 		//Counter-clockwise reference of vertices
 		this.indices = [
 			0, 1, 2,
             2, 1, 0,
+		];
+
+		this.normals = [
+			0, 1, 0,    //0
+			0, 1, 0,	//1
+			0, 1, 0,	//2
+			0, -1, 0,	//3
+			0, -1, 0,	//4
+			0, -1, 0,	//5
 		];
 
 		//The defined indices (and corresponding vertices)

@@ -101,7 +101,7 @@ export class MyUnitCube extends CGFobject {
 	}
 
 	
-    display() {
+    display(enableViz) {
         super.display();
       }
 }

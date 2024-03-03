@@ -25,12 +25,13 @@ export class MyTangram extends CGFobject {
         this.normals = [];
     }
 
+
     updateBuffers(complexity){
 		this.initBuffers()
 		this.initNormalVizBuffers();
 	}
 
-    display() {
+    display(enableViz) {
 
             this.scene.pushMatrix();
             let translationMatrix = [1, 0, 0, 0,
@@ -40,6 +41,21 @@ export class MyTangram extends CGFobject {
             ]
 
             this.scene.multMatrix(translationMatrix)
+
+            if(enableViz){
+                this.diamond.enableNormalViz();
+                this.triangle.enableNormalViz();
+                this.triangleBig.enableNormalViz();
+                this.triangleSmall.enableNormalViz();
+                this.parallelogram.enableNormalViz();
+            }
+            else{
+                this.diamond.disableNormalViz();
+                this.triangle.disableNormalViz();
+                this.triangleBig.disableNormalViz();
+                this.triangleSmall.disableNormalViz();
+                this.parallelogram.disableNormalViz();
+            }
 
             this.scene.pushMatrix()
             this.scene.translate(2,0,2);
@@ -68,7 +84,6 @@ export class MyTangram extends CGFobject {
             this.scene.rotate(-Math.PI/4,0,1,0);
             this.triangleBig.display();
             this.scene.popMatrix();
-            
             
             this.scene.pushMatrix();
             this.scene.translate(-1.52,0,-0.08)

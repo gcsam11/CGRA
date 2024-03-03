@@ -47,6 +47,7 @@ export class MyScene extends CGFscene {
         this.displayNormals = false;
         this.objectComplexity = 0.5;
         this.scaleFactor = 2.0;
+        this.enableViz = false;
 
     }
     initLights() {
@@ -177,13 +178,18 @@ export class MyScene extends CGFscene {
 
         this.pushMatrix();
         this.scale(this.scaleFactor,this.scaleFactor,this.scaleFactor);
+
         
-        if (this.displayNormals)
+        if (this.displayNormals){
             this.objects[this.selectedObject].enableNormalViz();
-        else
+            this.enableViz = true;
+        }
+        else{
             this.objects[this.selectedObject].disableNormalViz();
+            this.enableViz = false;
+        }
         
-        this.objects[this.selectedObject].display();
+        this.objects[this.selectedObject].display(this.enableViz);
         this.popMatrix();
         // ---- END Primitive drawing section
     }

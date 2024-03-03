@@ -69,7 +69,7 @@ export class MyPlane extends CGFobject {
     Each row must be drawn patchLength lower than the one before it.
     To draw each row, the drawElements() function is used. This function draws the geometry defined in initBuffers();
     */
-    display() {
+    display(enableViz) {
         this.scene.pushMatrix();
         for (var i = 0; i < this.nDivs; i++) {
             super.display();

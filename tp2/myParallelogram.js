@@ -15,9 +15,15 @@ export class MyParallelogram extends CGFobject {
 			0, 0, 0,	//0
 			1, 0, -1,	//1
 			1, 0, 0,	//2
-            2, 0, -1,    //3
+            2, 0, -1,   //3
             2, 0, 0,    //4
-            3, 0, -1,    //5
+            3, 0, -1,   //5
+			0, 0, 0,	//6
+			1, 0, -1,	//7
+			1, 0, 0,	//8
+            2, 0, -1,   //9
+            2, 0, 0,    //10
+            3, 0, -1,   //11
 		];
 
         this.vertices = this.vertices.concat(this.vertices);
@@ -35,6 +41,21 @@ export class MyParallelogram extends CGFobject {
 		];
 
         this.indices = this.indices.map(index => index + 6);
+
+		this.normals = [
+			0, 1, 0,    //0
+			0, 1, 0,	//1
+			0, 1, 0,	//2
+			0, 1, 0,	//3
+			0, 1, 0,	//4
+			0, 1, 0,	//5
+			0, -1, 0,	//6
+			0, -1, 0,	//7
+			0, -1, 0,	//8
+			0, -1, 0,	//9
+			0, -1, 0,	//10
+			0, -1, 0,	//11
+		];
 
 		//The defined indices (and corresponding vertices)
 		//will be read in groups of three to draw triangles
