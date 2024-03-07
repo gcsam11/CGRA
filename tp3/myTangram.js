@@ -26,7 +26,7 @@ export class MyTangram extends CGFobject {
     }
 
 
-    updateBuffers(complexity){
+    updateBuffers(complexity, stackComplexity){
 		this.initBuffers()
 		this.initNormalVizBuffers();
 	}

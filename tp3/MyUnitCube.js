@@ -105,7 +105,7 @@ export class MyUnitCube extends CGFobject {
 		this.initGLBuffers();
 	}
 
-	updateBuffers(complexity){
+	updateBuffers(complexity, stackComplexity){
 		this.initBuffers()
 		this.initNormalVizBuffers();
 	}
