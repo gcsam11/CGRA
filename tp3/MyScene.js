@@ -4,6 +4,7 @@ import { MyCone } from "./MyCone.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyTangram } from "./myTangram.js";
 import { MyUnitCube } from "./MyUnitCube.js";
+import { MyPrism } from "./MyPrism.js";
 
 /**
 * MyScene
@@ -34,11 +35,12 @@ export class MyScene extends CGFscene {
         this.pyramid = new MyPyramid(this, 3, 1);
         this.tangram = new MyTangram(this);
         this.cube = new MyUnitCube(this);
+        this.prism = new MyPrism(this, 8, 5);
         
-        this.objects = [ this.cube, this.tangram, this.plane, this.pyramid, this.cone];
+        this.objects = [ this.prism, this.cube, this.tangram, this.plane, this.pyramid, this.cone];
 
         // Labels and ID's for object selection on MyInterface
-        this.objectIDs = { 'Cube': 0, 'Tangram': 1, 'Plane': 2 , 'Pyramid': 3, 'Cone': 4};
+        this.objectIDs = { 'Prism': 0, 'Cube': 1, 'Tangram': 2, 'Plane': 3, 'Pyramid': 4, 'Cone': 5};
 
         //Other variables connected to MyInterface
         this.selectedObject = 0;
@@ -46,6 +48,7 @@ export class MyScene extends CGFscene {
         this.displayAxis = true;
         this.displayNormals = false;
         this.objectComplexity = 0.5;
+        this.stackComplexity = 0.5;
         this.scaleFactor = 2.0;
         this.enableViz = false;
 
@@ -57,14 +60,14 @@ export class MyScene extends CGFscene {
         this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
         this.lights[0].setSpecular(1.0, 1.0, 1.0, 1.0);
         this.lights[0].disable();
-        this.lights[0].setVisible(true);
+        this.lights[0].setVisible(false);
         this.lights[0].update();
 
         this.lights[1].setPosition(0.0, -1.0, 2.0, 1.0);
         this.lights[1].setDiffuse(1.0, 1.0, 1.0, 1.0);
         this.lights[1].setSpecular(1.0, 1.0, 0.0, 1.0);
         this.lights[1].disable();
-        this.lights[1].setVisible(true);
+        this.lights[1].setVisible(false);
         this.lights[1].update();
     }
 
@@ -104,7 +107,7 @@ export class MyScene extends CGFscene {
     };
 
     updateObjectComplexity(){
-        this.objects[this.selectedObject].updateBuffers(this.objectComplexity);
+        this.objects[this.selectedObject].updateBuffers(this.objectComplexity, this.stackComplexity);
     }
 
 
