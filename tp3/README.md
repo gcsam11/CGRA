@@ -5,8 +5,8 @@
 ## TP 3 Notes
 
 - In exercise 1 we started by copying the Tangram and the UnitCube files from the previous TP.
-We then manually, 1 by 1, repeated the vertices and created the normals for the objects.
-Then we created the 'Madeira' type material with 0.3 specular component and tested on the Cube:
+We grouped the cube's vertices by faces, therefore making it easier to understand how to define the indexes and normals.
+Then we created the 'Madeira' type material with Ambient and Diffuse components with the function `hexToRgbA` and color `#A1662F`, and Specular component with the value of 0.3 across all colors and tested on the Cube:
 
 ![alt text](./screenshots/cg-t07g09-tp3-1.png)
 

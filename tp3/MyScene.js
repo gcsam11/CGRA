@@ -133,9 +133,9 @@ export class MyScene extends CGFscene {
         // Custom material (can be changed in the interface)
         // initially midrange values on ambient, diffuse and specular, on R, G and B respectively
         this.material4 = new CGFappearance(this);
-        this.material4.setAmbient(0.0, 0.0, 0.0, 1.0);
-        this.material4.setDiffuse(0, 0, 0, 1.0);
-        this.material4.setSpecular(0.3, 0, 0, 1.0);
+        this.material4.setAmbient(...this.hexToRgbA("#A1662F"), 1);
+        this.material4.setDiffuse(...this.hexToRgbA("#A1662F"), 1);
+        this.material4.setSpecular(0.3, 0.3, 0.3, 1.0);
         this.material4.setShininess(10.0);
 
         this.customMaterialValues = {

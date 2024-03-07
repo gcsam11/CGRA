@@ -12,52 +12,57 @@ export class MyUnitCube extends CGFobject {
 	
 	initBuffers() {
 		this.vertices = [
-			-0.5, -0.5, 0.5,	//0 - BFL -> Bottom Front Left
-			0.5, -0.5, 0.5,	    //1 - BFR
-			-0.5, 0.5, 0.5,	    //2 - TPF
-            0.5, 0.5, 0.5,	    //3 - TPR
-            -0.5, -0.5, -0.5,	//4 - BBL
-			0.5, -0.5, -0.5,	//5 - BBR
-			-0.5, 0.5, -0.5,	//6 - TPL
-            0.5, 0.5, -0.5,	    //7 - TPR
-			-0.5, -0.5, 0.5,	//8 - BFL -> Bottom Front Left
-			0.5, -0.5, 0.5,	    //9 - BFR
-			-0.5, 0.5, 0.5,	    //10 - TPF
-            0.5, 0.5, 0.5,	    //11 - TPR
-            -0.5, -0.5, -0.5,	//12 - BBL
-			0.5, -0.5, -0.5,	//13 - BBR
-			-0.5, 0.5, -0.5,	//14 - TPL
-            0.5, 0.5, -0.5,	    //15 - TPR
-			-0.5, -0.5, 0.5,	//16 -  BFL -> Bottom Front Left
-			0.5, -0.5, 0.5,	    //17 - BFR
-			-0.5, 0.5, 0.5,	    //18 - TPF
-            0.5, 0.5, 0.5,	    //19 - TPR
-            -0.5, -0.5, -0.5,	//20 - BBL
-			0.5, -0.5, -0.5,	//21 - BBR
-			-0.5, 0.5, -0.5,	//22 - TPL
-            0.5, 0.5, -0.5	    //23 - TPR
+			-0.5, -0.5, 0.5, //0 - BFL -> Bottom Front Left
+			0.5, -0.5, 0.5, //1 - BFR -> Bottom Front Right
+			-0.5, 0.5, 0.5, //2 - TFL -> Top Front Left
+			0.5, 0.5, 0.5, //3 - TFR -> Top Front Right
+
+			-0.5, -0.5, -0.5, //4 - BBL -> Bottom Back Left
+			0.5, -0.5, -0.5, //5 - BBR -> Bottom Back Right
+			-0.5, 0.5, -0.5, //6 - TBL -> Top Back Left
+			0.5, 0.5, -0.5, //7 - TBR -> Top Back Right
+
+			0.5, -0.5, 0.5, //8 - BRF -> Bottom Right Front
+			0.5, -0.5, -0.5, //9 - BRB -> Bottom Right Back
+			0.5, 0.5, 0.5, //10 - TRF -> Top Right Front
+			0.5, 0.5, -0.5, //11 - TRB -> Top Right Back
+
+			-0.5, -0.5, 0.5, //12 - BLF -> Bottom Left Front
+			-0.5, -0.5, -0.5, //13 - BLB -> Bottom Left Back
+			-0.5, 0.5, 0.5, //14 - TLF -> Top Left Front
+			-0.5, 0.5, -0.5, //15 - TLB -> Top Left Back
+
+			0.5, 0.5, 0.5, //16 - TFRF -> Top Face Right Front
+			0.5, 0.5, -0.5, //17 - TFRB -> Top Face Right Back
+			-0.5, 0.5, 0.5, //18 - TFLF -> Top Face Left Front
+			-0.5, 0.5, -0.5, //19 - TFLB -> Top Face Left Back
+
+			0.5, -0.5, 0.5, //20 - BFRF -> Bottom Face Right Front
+			0.5, -0.5, -0.5, //21 - BFRB -> Bottom Face Right Back
+			-0.5, -0.5, 0.5, //22 - BFLF -> Bottom Face Left Front
+			-0.5, -0.5, -0.5 //23 - BFLB -> Bottom Face Left Back
 		];
 
 		//Counter-clockwise reference of vertices
 		this.indices = [
 
-			2, 3, 6,
-			7, 6, 3,
+			0, 1, 2,
+			3, 2, 1,
 
-			5, 1, 0,
-			4, 5, 0,
+			4, 5, 6,
+			7, 6, 5,
 
-			1, 5, 3,
-			7, 3, 5,
+			8, 9, 10,
+			11, 10, 9,
 
-			2, 4, 0,
-			4, 2, 6,
+			12, 13, 14,
+			15, 14, 13,
 
-			3, 2, 0,
-			1, 3, 0,
+			16, 17, 18,
+			19, 18, 17,
 
-			5, 4, 7,
-			6, 7, 4
+			20, 21, 22,
+			23, 22, 21
 
 		];
 		
@@ -66,26 +71,31 @@ export class MyUnitCube extends CGFobject {
 			0, 0, 1, //1
 			0, 0, 1, //2
 			0, 0, 1, //3
-			0, 0,-1, //4
-			0, 0,-1, //5
-			0, 0,-1, //6
-			0, 0,-1, //7
-			-1, 0, 0, //8
+
+			0, 0, -1, //4
+			0, 0, -1, //5
+			0, 0, -1, //6
+			0, 0, -1, //7
+
+			1, 0, 0, //8
 			1, 0, 0, //9
-			0, 1, 0, //10
-			0, 1, 0, //11
+			1, 0, 0, //10
+			1, 0, 0, //11
+
 			-1, 0, 0, //12
-			1, 0, 0, //13
+			-1, 0, 0, //13
 			-1, 0, 0, //14
-			1, 0, 0, //15
-			0, -1, 0, //16
-			0, -1, 0, //17
-			-1, 0, 0, //18
-			1, 0, 0, //19
+			-1, 0, 0, //15
+
+			0, 1, 0, //16
+			0, 1, 0, //17
+			0, 1, 0, //18
+			0, 1, 0, //19
+
 			0, -1, 0, //20
 			0, -1, 0, //21
-			0, 1, 0, //22
-			0, 1, 0  //23
+			0, -1, 0, //22
+			0, -1, 0 //23
 		];
 
 		//The defined indices (and corresponding vertices)
