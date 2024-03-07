@@ -26,35 +26,35 @@ export class MyParallelogram extends CGFobject {
             3, 0, -1,   //11
 		];
 
-        this.vertices = this.vertices.concat(this.vertices);
+        //this.vertices = this.vertices.concat(this.vertices);
 
 		//Counter-clockwise reference of vertices
 		this.indices = [
 			0, 1, 2,
-            2, 1, 0,
+            8, 7, 6,
             1, 3, 2,
-            2, 3, 1,
+            8, 9, 7,
             2, 3, 4,
-            4, 3, 2,
+            10, 9, 8,
             3, 5, 4,
-            4, 5, 3
+            10, 11, 9
 		];
 
         this.indices = this.indices.map(index => index + 6);
 
 		this.normals = [
-			0, 1, 0,    //0
-			0, 1, 0,	//1
-			0, 1, 0,	//2
-			0, 1, 0,	//3
-			0, 1, 0,	//4
-			0, 1, 0,	//5
-			0, -1, 0,	//6
-			0, -1, 0,	//7
-			0, -1, 0,	//8
-			0, -1, 0,	//9
-			0, -1, 0,	//10
-			0, -1, 0,	//11
+			0, -1, 0,    //0
+			0, -1, 0,	//1
+			0, -1, 0,	//2
+			0, -1, 0,	//3
+			0, -1, 0,	//4
+			0, -1, 0,	//5
+			0, 1, 0,	//6
+			0, 1, 0,	//7
+			0, 1, 0,	//8
+			0, 1, 0,	//9
+			0, 1, 0,	//10
+			0, 1, 0,	//11
 		];
 
 		//The defined indices (and corresponding vertices)
