@@ -24,3 +24,9 @@ We then calculated the normals with the use of cross product, normalized the res
 Besides making the object alterable on the browser with the `objectComplexity` variable, which alters the bases number of sides from 2 to 10, we also created a variable `stackComplexity` so that we can divide the prism from 1 to 20 *floors*. We present below the prism with 8 slices and 20 stacks, with size 1 in Z.
 
 ![alt text](./screenshots/cg-t07g09-tp3-3.png)
+
+### Exercise 3
+
+- In exercise 2 we copied `MyPrism.js` to `myCylinder.js` and all we did was change the normals to *overlap* an invisible line from the center to the vertex.
+
+![alt text](./screenshots/cg-t07g09-tp3-4.png)
