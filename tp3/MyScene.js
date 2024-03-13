@@ -5,6 +5,7 @@ import { MyPlane } from "./MyPlane.js";
 import { MyTangram } from "./myTangram.js";
 import { MyUnitCube } from "./MyUnitCube.js";
 import { MyPrism } from "./MyPrism.js";
+import { MyCylinder } from "./myCylinder.js";
 
 /**
 * MyScene
@@ -36,11 +37,12 @@ export class MyScene extends CGFscene {
         this.tangram = new MyTangram(this);
         this.cube = new MyUnitCube(this);
         this.prism = new MyPrism(this, 8, 5);
+        this.cylinder = new MyCylinder(this, 8, 20);
         
-        this.objects = [ this.prism, this.cube, this.tangram, this.plane, this.pyramid, this.cone];
+        this.objects = [ this.cylinder, this.prism, this.cube, this.tangram, this.plane, this.pyramid, this.cone];
 
         // Labels and ID's for object selection on MyInterface
-        this.objectIDs = { 'Prism': 0, 'Cube': 1, 'Tangram': 2, 'Plane': 3, 'Pyramid': 4, 'Cone': 5};
+        this.objectIDs = { 'Cylinder': 0, 'Prism': 1, 'Cube': 2, 'Tangram': 3, 'Plane': 4, 'Pyramid': 5, 'Cone': 6 };
 
         //Other variables connected to MyInterface
         this.selectedObject = 0;
@@ -60,14 +62,14 @@ export class MyScene extends CGFscene {
         this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
         this.lights[0].setSpecular(1.0, 1.0, 1.0, 1.0);
         this.lights[0].disable();
-        this.lights[0].setVisible(false);
+        this.lights[0].setVisible(true);
         this.lights[0].update();
 
         this.lights[1].setPosition(0.0, -1.0, 2.0, 1.0);
         this.lights[1].setDiffuse(1.0, 1.0, 1.0, 1.0);
         this.lights[1].setSpecular(1.0, 1.0, 0.0, 1.0);
         this.lights[1].disable();
-        this.lights[1].setVisible(false);
+        this.lights[1].setVisible(true);
         this.lights[1].update();
     }
 
