@@ -1,6 +1,7 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
 import { MyQuad } from "./MyQuad.js";
 import { MyTangram } from "./myTangram.js";
+import { MyUnitCubeQuad } from "./myUnitCubeQuad.js";
 
 /**
  * MyScene
@@ -29,6 +30,7 @@ export class MyScene extends CGFscene {
         this.axis = new CGFaxis(this);
         this.quad = new MyQuad(this);
         this.tangram = new MyTangram(this);
+        this.unitCube = new MyUnitCubeQuad(this, 'images/mineSide.png', 'images/mineSide.png', 'images/mineSide.png', 'images/mineSide.png', 'images/mineTop.png', 'images/mineBottom.png');
 
         //------ Applied Material
         this.quadMaterial = new CGFappearance(this);
@@ -50,7 +52,8 @@ export class MyScene extends CGFscene {
         this.displayAxis = true;
         this.displayQuad = false;
         this.displayQuadMaterial = false;
-        this.displayTangram = true;
+        this.displayTangram = false;
+        this.displayUnitCube = true;
         this.scaleFactor = 5;
         this.selectedTexture = -1;        
         this.wrapS = 0;
@@ -139,6 +142,9 @@ export class MyScene extends CGFscene {
             this.tangram.display();
         }
 
+        if (this.displayUnitCube){
+            this.unitCube.display();
+        }
         // ---- END Primitive drawing section
     }
 }
