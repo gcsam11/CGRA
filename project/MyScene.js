@@ -1,5 +1,7 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPlane } from "./MyPlane.js";
+import { MyPanorama } from "./MyPanorama.js";
+import { MySphere } from "./MySphere.js";
 
 /**
  * MyScene
@@ -26,6 +28,8 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
+    this.panorama = new MyPanorama(this, 200);
+    this.sphere = new MySphere(this, 30);
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -33,10 +37,21 @@ export class MyScene extends CGFscene {
 
     this.enableTextures(true);
 
-this.texture = new CGFtexture(this, "images/terrain.jpg");
-this.appearance = new CGFappearance(this);
-this.appearance.setTexture(this.texture);
-this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+    this.texture = new CGFtexture(this, "textures/terrain.jpg");
+    this.appearance = new CGFappearance(this);
+    this.appearance.setTexture(this.texture);
+    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.sky = new CGFtexture(this, "textures/panorama2.jpg");
+    this.skybox = new CGFappearance(this);
+    this.skybox.setTexture(this.sky);
+    this.skybox.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.eye = new CGFtexture(this, "textures/eye.jpg");
+    this.eyeball = new CGFappearance(this);
+    this.eyeball.setTexture(this.eye);
+    this.eyeball.setTextureWrap('REPEAT', 'REPEAT');
+
 
   }
   initLights() {
@@ -55,7 +70,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     );
   }
   setDefaultAppearance() {
-    this.setAmbient(0.2, 0.4, 0.8, 1.0);
+    this.setAmbient(0.8, 0.8, 0.8, 1.0);
     this.setDiffuse(0.2, 0.4, 0.8, 1.0);
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.setShininess(10.0);
@@ -73,7 +88,20 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
     // Draw axis
     if (this.displayAxis) this.axis.display();
+    
 
+    this.pushMatrix();
+    this.eyeball.apply();
+    this.sphere.display();
+    this.popMatrix();
+
+
+    this.pushMatrix();
+    this.skybox.apply();
+    this.rotate(Math.PI, 1, 0,0);
+    this.panorama.display();
+    this.popMatrix();
+    
     // ---- BEGIN Primitive drawing section
 
     this.pushMatrix();
