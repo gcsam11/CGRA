@@ -1,6 +1,5 @@
 import { CGFobject } from '../lib/CGF.js';
 
-
 export class MySphere extends CGFobject {
     constructor(scene, radius, slices, stacks) {
         super(scene);
@@ -16,12 +15,12 @@ export class MySphere extends CGFobject {
         this.normals = [];
         this.texCoords = [];
 
-        for (let stack = 0; stack <= this.stacks; stack++) {
+        for (var stack = 0; stack <= this.stacks; stack++) {
             const phi = (stack * Math.PI) / this.stacks;
             const cosPhi = Math.cos(phi);
             const sinPhi = Math.sin(phi);
 
-            for (let slice = 0; slice <= this.slices; slice++) {
+            for (var slice = 0; slice <= this.slices; slice++) {
                 const theta = (slice * 2 * Math.PI) / this.slices;
                 const x = this.radius * Math.cos(theta) * sinPhi;
                 const y = this.radius * cosPhi;
@@ -36,8 +35,8 @@ export class MySphere extends CGFobject {
             }
         }
 
-        for (let stack = 0; stack < this.stacks; stack++) {
-            for (let slice = 0; slice < this.slices; slice++) {
+        for (var stack = 0; stack < this.stacks; stack++) {
+            for (var slice = 0; slice < this.slices; slice++) {
                 const first = stack * (this.slices + 1) + slice;
                 const second = first + this.slices + 1;
 
