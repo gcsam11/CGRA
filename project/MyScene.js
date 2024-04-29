@@ -3,6 +3,7 @@ import { MyPlane } from "./MyPlane.js";
 import { MyPanorama } from "./MyPanorama.js";
 import { MySphere } from "./MySphere.js";
 import { MyGarden } from "./myGarden.js";
+import { MyFlower } from "./Flowers/MyFlower.js";
 
 /**
  * MyScene
@@ -32,6 +33,7 @@ export class MyScene extends CGFscene {
     this.panorama = new MyPanorama(this, 200);
     this.sphere = new MySphere(this, 30);
     this.garden = new MyGarden(this);
+    this.flower = new MyFlower(this);
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -98,7 +100,7 @@ export class MyScene extends CGFscene {
     this.sphere.display();
     this.popMatrix();*/
 
-
+/*
     this.pushMatrix();
     this.skybox.apply();
     this.rotate(Math.PI, 1, 0,0);
@@ -114,12 +116,13 @@ export class MyScene extends CGFscene {
     this.rotate(-Math.PI/2.0,1,0,0);
     this.plane.display();
     this.popMatrix();*/
-
+/*
     this.pushMatrix();
     this.translate(-50, -50, -50);
     this.garden.display();
-    this.popMatrix();
+    this.popMatrix();*/
     
+    this.flower.display();
 
     // ---- END Primitive drawing section
   }
