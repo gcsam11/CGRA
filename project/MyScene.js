@@ -4,6 +4,7 @@ import { MyPanorama } from "./MyPanorama.js";
 import { MySphere } from "./MySphere.js";
 import { MyGarden } from "./myGarden.js";
 import { MyFlower } from "./Flowers/MyFlower.js";
+import { MyBee } from "./MyBee.js"
 
 /**
  * MyScene
@@ -27,6 +28,9 @@ export class MyScene extends CGFscene {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+    this.gl.enable(this.gl.BLEND);
+
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
@@ -34,6 +38,7 @@ export class MyScene extends CGFscene {
     this.sphere = new MySphere(this, 30);
     this.garden = new MyGarden(this);
     this.flower = new MyFlower(this);
+    this.bee = new MyBee(this);
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -93,12 +98,6 @@ export class MyScene extends CGFscene {
 
     // Draw axis
     if (this.displayAxis) this.axis.display();
-    
-
-    /*this.pushMatrix();
-    this.eyeball.apply();
-    this.sphere.display();
-    this.popMatrix();*/
 
 /*
     this.pushMatrix();
@@ -115,14 +114,16 @@ export class MyScene extends CGFscene {
     this.scale(400,400,400);
     this.rotate(-Math.PI/2.0,1,0,0);
     this.plane.display();
-    this.popMatrix();*/
-/*
+    this.popMatrix();
+
     this.pushMatrix();
     this.translate(-50, -50, -50);
     this.garden.display();
     this.popMatrix();*/
     
-    this.flower.display();
+    //this.flower.display();
+
+    this.bee.display();
 
     // ---- END Primitive drawing section
   }

@@ -56,7 +56,7 @@ export class MyFlower extends CGFobject {
         var y = 0;
 
         var stemHeight = this.stemLength; // Each stack represents a portion of the stem's height
-        for (var i = 1; i < this.stemSize; i++) {
+        for (var i = 1; i < 3; i++) {
             // Calculate the new y and z coordinates
             if(i != 1){
                 y += Math.cos(stemAngle);
