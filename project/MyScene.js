@@ -115,10 +115,10 @@ export class MyScene extends CGFscene {
     this.plane.display();
     this.popMatrix();*/
 
-    this.pushMatrix();
+    /*this.pushMatrix();
     this.translate(-50, -50, -50);
     this.garden.display();
-    this.popMatrix();
+    this.popMatrix();*/
     
 
     // ---- END Primitive drawing section
