@@ -61,7 +61,6 @@ export class MyScene extends CGFscene {
     this.eyeball.setTexture(this.eye);
     this.eyeball.setTextureWrap('REPEAT', 'REPEAT');
 
-
   }
   initLights() {
     this.lights[0].setPosition(15, 0, 5, 1);

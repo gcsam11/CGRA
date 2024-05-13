@@ -1,11 +1,10 @@
-import { CGFappearance, CGFobject} from '../../lib/CGF.js';
+import { CGFappearance, CGFobject, CGFtexture} from '../../lib/CGF.js';
 import { MySphere } from '../MySphere.js';
 
 export class MyBeeBody extends CGFobject {
     constructor(scene){
         super(scene);
         this.sphere = new MySphere(this.scene);
-        this.material = new CGFappearance(this.scene);
         this.initBuffers();
     }
 
