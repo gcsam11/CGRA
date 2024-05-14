@@ -31,6 +31,25 @@ export class MyScene extends CGFscene {
     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     this.gl.enable(this.gl.BLEND);
 
+    // animation
+    this.setUpdatePeriod(50); // **at least** 50 ms between animations
+
+    this.appStartTime=Date.now(); // current time in milisecs
+
+    this.animVal1=0;
+    this.animVal2=0;
+    this.animVal3=0;
+
+    //#region Pars for anim 3
+    this.startVal=0;
+    this.endVal=6;
+    this.animStartTimeSecs=2;
+    this.animDurationSecs=3;
+    this.length=(this.endVal-this.startVal);
+    //#endregion
+
+    this.beeSpeedVector = {x: 0, y: 0, z: 0};
+
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
@@ -40,8 +59,12 @@ export class MyScene extends CGFscene {
     this.flower = new MyFlower(this);
     this.bee = new MyBee(this);
 
+    this.animObjs = [this.bee];
+    this.numAnimObjs = 1;
+
     //Objects connected to MyInterface
     this.displayAxis = true;
+    this.speedFactor = 0.1;
     this.scaleFactor = 1;
 
     this.enableTextures(true);
@@ -62,6 +85,75 @@ export class MyScene extends CGFscene {
     this.eyeball.setTextureWrap('REPEAT', 'REPEAT');
 
   }
+  updateSpeedFactor(){
+    this.bee.updateSpeedFactor(this.speedFactor);
+  }
+  update(t)
+  {
+      this.checkKeys();
+      // Update without considering time - BAD
+      this.animVal1+=0.1;
+
+      //#region Ex.2 
+      // Continuous animation based on current time and app start time 
+      var timeSinceAppStart=(t-this.appStartTime)/1000.0;
+
+      //#region Ex. 4 
+      // delegate animations to objects
+      for (var i=0;i<this.numAnimObjs;i++)
+        this.animObjs[i].update(timeSinceAppStart);
+      //#endregion
+      //#endregion
+      //#endregion
+  }
+  checkKeys() {
+    var text = "Keys pressed: ";
+    var keysPressed = false;
+    // Check for key codes e.g. in https://keycode.info/
+    if (this.gui.isKeyPressed("KeyW")) {
+      text += " W ";
+      keysPressed = true;
+      if(this.bee.direction == 1){
+        this.bee.accelerate();
+      }
+      else if(this.bee.direction == -1){
+        this.bee.brake();
+      }
+      else{
+        this.bee.accelerate();
+      }
+    }
+    if (this.gui.isKeyPressed("KeyS")) {
+      text += " S ";
+      keysPressed = true;
+      if(this.bee.direction == 1){
+        this.bee.brake();
+      }
+      else if(this.bee.direction == -1){
+        this.bee.accelerate();
+      }
+      else{
+        this.bee.brake();
+      }
+    }
+    if(this.gui.isKeyPressed("KeyA")){
+      text += " A ";
+      keysPressed = true;
+      this.bee.turnLeft();
+    }
+    if(this.gui.isKeyPressed("KeyD")){
+      text += " D ";
+      keysPressed = true;
+      this.bee.turnRight();
+    }
+    if( this.gui.isKeyPressed("KeyR")) {
+      text += " R ";
+      keysPressed = true;
+      this.bee.resetPos();
+    }
+    if (keysPressed)
+      console.log(text);
+  }  
   initLights() {
     this.lights[0].setPosition(15, 0, 5, 1);
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
@@ -122,7 +214,10 @@ export class MyScene extends CGFscene {
     
     //this.flower.display();
 
+    this.pushMatrix();
+    this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     this.bee.display();
+    this.popMatrix()
 
     // ---- END Primitive drawing section
   }

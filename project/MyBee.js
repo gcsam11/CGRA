@@ -8,7 +8,7 @@ import { MyBeeEye } from './Bee/MyBeeEye.js';
 import { MyLegs } from './Bee/MyLegs.js';
 
 export class MyBee extends CGFobject {
-    constructor(scene){
+    constructor(scene, s=3, e=5, st=1, d=2.5, x=0, y=0, z=0, orientationAngle = 0, speedVector = { x: 0, y: 0, z:0 }, speedFactor = 0.1){
         super(scene);
         this.beeBodyTexture = new CGFtexture(this.scene, 'textures/beeStripes.jpg');
         this.beeBodyMaterial = new CGFappearance(this.scene);
@@ -23,6 +23,23 @@ export class MyBee extends CGFobject {
         this.mandibles = new MyMandibles(this.scene);
         this.beeEye = new MyBeeEye(this.scene);
         this.legs = new MyLegs(this.scene);
+        this.wingLength = 1.5;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.orientationAngle = orientationAngle;
+        this.speedVector = speedVector;
+        this.speedFactor = speedFactor;
+        this.turnFactor = Math.PI / 90;
+        this.direction = 0;
+        
+        this.startVal=s;
+        this.endVal=e;
+        this.animStartTimeSecs=st;
+        this.animDurationSecs=d;
+        this.length=(this.endVal-this.startVal);
+
+        this.animVal=this.startVal;
 
         this.initBuffers();
     }
@@ -45,7 +62,89 @@ export class MyBee extends CGFobject {
         this.initGLBuffers();
     }
 
+    updateSpeedFactor(speedFactor){
+        this.speedFactor = speedFactor;
+    }
+
+    updateDirection() {
+        if(this.speedVector.x === 0 && this.speedVector.z === 0) {
+            this.direction = 0; // stopped
+        }
+        else if (this.orientationAngle > this.currentOrientationAngle) {
+            this.direction = 1; // turning right
+        } 
+        else if (this.orientationAngle < this.currentOrientationAngle) {
+            this.direction = -1; // turning left
+        } 
+        else {
+            this.direction = 0; // not turning
+        }
+    }
+
+    resetPos(){
+        this.x = 0;
+        this.z = 0;
+        this.speedVector.x = 0;
+        this.speedVector.z = 0;
+        this.orientationAngle = 0;
+        this.direction = 0;
+    }
+
+    accelerate(){
+        this.currentOrientationAngle = this.orientationAngle;
+        if(this.direction == 1){
+            this.speedVector.x += Math.cos(-this.currentOrientationAngle) * this.speedFactor;
+            this.speedVector.z += Math.sin(-this.currentOrientationAngle) * this.speedFactor;
+        }
+        else if(this.direction == -1){
+            this.speedVector.x -= Math.cos(-this.currentOrientationAngle) * this.speedFactor;
+            this.speedVector.z -= Math.sin(-this.currentOrientationAngle) * this.speedFactor;
+        }
+        else{
+            this.speedVector.x += Math.cos(-this.currentOrientationAngle) * this.speedFactor;
+            this.speedVector.z += Math.sin(-this.currentOrientationAngle) * this.speedFactor;
+        }
+    }
+    
+    brake(){
+        this.currentOrientationAngle = this.orientationAngle;
+        if(this.direction == -1){
+            this.speedVector.x += Math.cos(-this.currentOrientationAngle) * this.speedFactor;
+            this.speedVector.z += Math.sin(-this.currentOrientationAngle) * this.speedFactor;
+        }
+        else if(this.direction == 1){
+            this.speedVector.x -= Math.cos(-this.currentOrientationAngle) * this.speedFactor;
+            this.speedVector.z -= Math.sin(-this.currentOrientationAngle) * this.speedFactor;
+        }
+        else{
+            this.speedVector.x -= Math.cos(-this.currentOrientationAngle) * this.speedFactor;
+            this.speedVector.z -= Math.sin(-this.currentOrientationAngle) * this.speedFactor;
+        }
+    }
+
+    updateSpeedVector(){
+        if(this.direction != 0){
+            var speedMagnitude = Math.sqrt(this.speedVector.x**2 + this.speedVector.z**2);
+            this.speedVector.x = Math.cos(-this.orientationAngle) * speedMagnitude;
+            this.speedVector.z = Math.sin(-this.orientationAngle) * speedMagnitude;
+        }
+    }
+
+    turnLeft(){
+        this.orientationAngle += this.turnFactor;
+        this.updateSpeedVector(this.orientationAngle);
+    }
+    
+    turnRight(){
+        this.orientationAngle -= this.turnFactor;
+        this.updateSpeedVector(this.orientationAngle);
+    }
+
     display(){
+
+        this.scene.translate(this.x, this.animVal, this.z);
+        this.scene.rotate(this.orientationAngle, 0, 1, 0);
+        this.scene.rotate(-Math.PI/2, 0, 1, 0);
 
         this.scene.pushMatrix();
         this.headMaterial.apply();
@@ -165,5 +264,22 @@ export class MyBee extends CGFobject {
 
         super.display();
 
+    }
+
+    update(timeSinceAppStart) {
+        this.updateDirection();
+
+        // Animation based on elapsed time since animation start
+        var elapsedTimeSecs = timeSinceAppStart - this.animStartTimeSecs;
+    
+        // Calculate a value that oscillates between -1 and 1 over time
+        var oscillation = Math.sin(elapsedTimeSecs * Math.PI * 2 / this.animDurationSecs);
+    
+        // Scale and shift the oscillation to the desired range
+        this.animVal = this.startVal + oscillation * this.length;
+
+        // Update x and z based on speedVector and elapsed time
+        this.x += this.speedVector.x;
+        this.z += this.speedVector.z;
     }
 }
