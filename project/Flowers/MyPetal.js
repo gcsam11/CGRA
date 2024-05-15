@@ -69,11 +69,6 @@ export class MyPetal extends CGFobject {
                         -normal1[2]
                     ];
 
-        // Push the normals to the normals array
-        this.normals.push(...normal1);
-        this.normals.push(...normal1);
-        this.normals.push(...normal1);
-
         // Calculate the vectors for the edges of the second triangle (front face)
         var v3 = [
             this.vertices[9] - this.vertices[15],
@@ -97,6 +92,11 @@ export class MyPetal extends CGFobject {
                         -normal2[1],
                         -normal2[2]
                     ];
+
+        // Push the normals to the normals array
+        this.normals.push(...normal1);
+        this.normals.push(...normal1);
+        this.normals.push(...normal1);
 
         this.normals.push(...normal2);
         this.normals.push(...normal2);

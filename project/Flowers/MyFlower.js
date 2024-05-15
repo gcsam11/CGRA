@@ -46,24 +46,33 @@ export class MyFlower extends CGFobject {
 
     display() {
 
-        this.receptacle.display();
+        //this.receptacle.display();
 
         this.scene.pushMatrix();
         this.scene.translate(0, 0, this.receptacleRadius-0.1);
         this.stem.display();
         this.scene.popMatrix();
+        var stemAngle = 80 * Math.PI / 180;
+        var y = 0;
 
         var stemHeight = this.stemLength; // Each stack represents a portion of the stem's height
-        for (var i = 1; i < this.stemSize; i++) {
+        for (var i = 1; i < 3; i++) {
+            // Calculate the new y and z coordinates
+            if(i != 1){
+                y += Math.cos(stemAngle);
+            }
+            var z = (this.receptacleRadius + (stemHeight * i) - 0.1) * Math.sin(stemAngle);
             this.scene.pushMatrix();
-            this.scene.translate(0, 0, this.receptacleRadius+(stemHeight*i)-0.1);
+            this.scene.translate(0, -y, z);
+            this.scene.rotate(-stemAngle, 1, 0, 0);
+            this.scene.rotate(Math.PI/2, 1, 0, 0);
             this.stem.display();
             this.scene.popMatrix();
 
             this.scene.pushMatrix();
+            this.scene.translate(0, -y, z);
             this.scene.rotate(Math.PI/2, 1, 0, 0);
             this.scene.rotate(Math.PI/2, 0, 1, 0);
-            this.scene.translate(0, (this.receptacleRadius+(stemHeight*i)-0.1), 0);
             this.myLeaf.display();
             this.scene.popMatrix();
         }
@@ -72,7 +81,7 @@ export class MyFlower extends CGFobject {
         for (var i = 0; i < this.petalNumber; i++) {
             this.scene.pushMatrix();
             this.scene.rotate(maxAng * i * Math.PI / 180, 0, 1, 0);
-            this.petal.display();
+            //this.petal.display();
             this.scene.popMatrix();
         }
     }

@@ -4,7 +4,7 @@ export class MyStem extends CGFobject {
     constructor(scene, radius, color, leafcolor, height, stacks, slices){
         super(scene);
         this.slices = slices || 20;
-        this.stacks = stacks || 20;
+        this.stacks = stacks || 10;
         this.radius = radius;
         this.height = height;
         this.color = color;
