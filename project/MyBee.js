@@ -8,7 +8,7 @@ import { MyBeeEye } from './Bee/MyBeeEye.js';
 import { MyLegs } from './Bee/MyLegs.js';
 
 export class MyBee extends CGFobject {
-    constructor(scene, s=3, e=5, st=1, d=2.5, x=0, y=0, z=0, orientationAngle = 0, speedVector = { x: 0, y: 0, z:0 }, speedFactor = 0.1){
+    constructor(scene, s=3, e=5, st=1, d=2.5, x=0, y=0, z=0, orientationAngle = 0, speedVector = { x: 0, y: 0, z:0 }, speedFactor = 1){
         super(scene);
         this.beeBodyTexture = new CGFtexture(this.scene, 'textures/beeStripes.jpg');
         this.beeBodyMaterial = new CGFappearance(this.scene);
@@ -146,6 +146,8 @@ export class MyBee extends CGFobject {
         this.scene.rotate(this.orientationAngle, 0, 1, 0);
         this.scene.rotate(-Math.PI/2, 0, 1, 0);
 
+        // Body
+
         this.scene.pushMatrix();
         this.headMaterial.apply();
         this.scene.translate(0, Math.sin(Math.PI/4) - 0.2, -2*Math.cos(Math.PI/4) - 1.1);
@@ -175,6 +177,8 @@ export class MyBee extends CGFobject {
         this.stinger.display();
         this.scene.popMatrix();
 
+        // Antenna
+
         this.scene.pushMatrix();
         this.material.apply();
         this.scene.translate(0, Math.sin(Math.PI/4), -2*Math.cos(Math.PI/4) - 1.3);
@@ -182,12 +186,16 @@ export class MyBee extends CGFobject {
         this.antenna.display();
         this.scene.popMatrix();
 
+        // Mandibles
+
         this.scene.pushMatrix();
         this.material.apply();
         this.scene.translate(0, Math.sin(Math.PI/4) - 0.63, -2*Math.cos(Math.PI/4) - 1.25);
         this.scene.rotate(Math.PI, 1, 0, 0);
         this.mandibles.display();
         this.scene.popMatrix();
+
+        // Eyes
 
         this.scene.pushMatrix();
         this.material.apply();
@@ -206,6 +214,8 @@ export class MyBee extends CGFobject {
         this.scene.scale(0.2, 0.3, 0.2);
         this.beeEye.display();
         this.scene.popMatrix();
+
+        // Legs
 
         this.scene.pushMatrix();
         this.material.apply();
@@ -250,13 +260,19 @@ export class MyBee extends CGFobject {
         this.legs.display();
         this.scene.popMatrix();
 
+        // Wings 
+
         this.scene.pushMatrix();
         this.scene.translate(1.9, Math.sin(Math.PI/4), -Math.cos(Math.PI/4) - 1.1);
+        this.scene.translate(-1.3, 0, 0);
+        this.scene.rotate(this.wingAnimVal, 0, 0, 1);
         this.wings.display();
         this.scene.popMatrix();
 
         this.scene.pushMatrix();
         this.scene.translate(-1.9, Math.sin(Math.PI/4), -Math.cos(Math.PI/4) - 1.1);
+        this.scene.translate(1.3, 0, 0);
+        this.scene.rotate(-this.wingAnimVal, 0, 0, 1);
         this.scene.rotate(Math.PI, 1, 0, 0);
         this.scene.rotate(Math.PI, 0, 1, 0);
         this.wings.display();
@@ -273,12 +289,16 @@ export class MyBee extends CGFobject {
         var elapsedTimeSecs = timeSinceAppStart - this.animStartTimeSecs;
     
         // Calculate a value that oscillates between -1 and 1 over time
-        var oscillation = Math.sin(elapsedTimeSecs * Math.PI * 2 / this.animDurationSecs);
+        var oscillation = Math.sin(elapsedTimeSecs * Math.PI * 2 / (this.animDurationSecs / this.speedFactor));
+
+        var wingOscillation = Math.sin(elapsedTimeSecs * Math.PI * 2 / (0.25 / this.speedFactor));
     
         // Scale and shift the oscillation to the desired range
         this.animVal = this.startVal + oscillation * this.length;
 
-        // Update x and z based on speedVector and elapsed time
+        this.wingAnimVal = wingOscillation;
+
+        // Update x and z
         this.x += this.speedVector.x;
         this.z += this.speedVector.z;
     }

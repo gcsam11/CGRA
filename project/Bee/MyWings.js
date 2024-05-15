@@ -27,6 +27,9 @@ export class MyWings extends CGFobject {
 
     display(){
         this.scene.pushMatrix();
+        this.scene.translate(1.25, 0, 0);
+
+        this.scene.pushMatrix();
         this.wingsMaterial.apply();
         this.scene.scale(1.5, 0.05, 0.6);
         this.sphere.display();
@@ -40,5 +43,6 @@ export class MyWings extends CGFobject {
         this.sphere.display();
         this.scene.popMatrix();
         super.display();
+        this.scene.popMatrix();
     }
 }
