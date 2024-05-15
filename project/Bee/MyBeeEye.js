@@ -23,11 +23,13 @@ export class MyBeeEye extends CGFobject {
     }
 
     display(){
+        this.scene.pushMatrix();
         this.beeEyeMaterial.apply();
 
         this.scene.pushMatrix();
         this.sphere.display();
         this.scene.popMatrix();
         super.display();
+        this.scene.popMatrix();
     }
 }

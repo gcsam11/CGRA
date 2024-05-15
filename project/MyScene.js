@@ -5,6 +5,8 @@ import { MySphere } from "./MySphere.js";
 import { MyGarden } from "./myGarden.js";
 import { MyFlower } from "./Flowers/MyFlower.js";
 import { MyBee } from "./MyBee.js"
+import { MyPollen } from "./MyPollen.js";
+import { MyHive } from "./MyHive.js";
 
 /**
  * MyScene
@@ -40,13 +42,12 @@ export class MyScene extends CGFscene {
     this.animVal2=0;
     this.animVal3=0;
 
-    //#region Pars for anim 3
+    // Bee Animation values
     this.startVal=0;
     this.endVal=6;
     this.animStartTimeSecs=2;
     this.animDurationSecs=3;
     this.length=(this.endVal-this.startVal);
-    //#endregion
 
     this.beeSpeedVector = {x: 0, y: 0, z: 0};
 
@@ -58,7 +59,10 @@ export class MyScene extends CGFscene {
     this.garden = new MyGarden(this);
     this.flower = new MyFlower(this);
     this.bee = new MyBee(this);
+    this.pollen = new MyPollen(this);
+    this.hive = new MyHive(this, 3);
 
+    // Animated Objects
     this.animObjs = [this.bee];
     this.numAnimObjs = 1;
 
@@ -74,15 +78,11 @@ export class MyScene extends CGFscene {
     this.appearance.setTexture(this.texture);
     this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
+    // Panorama Texture
     this.sky = new CGFtexture(this, "textures/panorama2.jpg");
     this.skybox = new CGFappearance(this);
     this.skybox.setTexture(this.sky);
     this.skybox.setTextureWrap('REPEAT', 'REPEAT');
-
-    this.eye = new CGFtexture(this, "textures/eye.jpg");
-    this.eyeball = new CGFappearance(this);
-    this.eyeball.setTexture(this.eye);
-    this.eyeball.setTextureWrap('REPEAT', 'REPEAT');
 
   }
   updateSpeedFactor(){
@@ -190,7 +190,7 @@ export class MyScene extends CGFscene {
     // Draw axis
     if (this.displayAxis) this.axis.display();
 
-/*
+/*  // Panorama
     this.pushMatrix();
     this.skybox.apply();
     this.rotate(Math.PI, 1, 0,0);
@@ -199,6 +199,7 @@ export class MyScene extends CGFscene {
     
     // ---- BEGIN Primitive drawing section
 
+    // Plane
     /*this.pushMatrix();
     this.appearance.apply();
     this.translate(0,-100,0);
@@ -207,6 +208,7 @@ export class MyScene extends CGFscene {
     this.plane.display();
     this.popMatrix();
 
+    // Flowers
     /*this.pushMatrix();
     this.translate(-50, -50, -50);
     this.garden.display();
@@ -214,10 +216,18 @@ export class MyScene extends CGFscene {
     
     //this.flower.display();
 
+    /*
+    // Bee
     this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     this.bee.display();
-    this.popMatrix()
+    this.popMatrix();*/
+
+    // Hive
+    this.pushMatrix();
+    this.hive.display();
+    this.popMatrix();
+  
 
     // ---- END Primitive drawing section
   }

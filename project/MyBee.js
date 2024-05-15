@@ -142,6 +142,8 @@ export class MyBee extends CGFobject {
 
     display(){
 
+        this.scene.pushMatrix();
+
         this.scene.translate(this.x, this.animVal, this.z);
         this.scene.rotate(this.orientationAngle, 0, 1, 0);
         this.scene.rotate(-Math.PI/2, 0, 1, 0);
@@ -279,6 +281,7 @@ export class MyBee extends CGFobject {
         this.scene.popMatrix();
 
         super.display();
+        this.scene.popMatrix();
 
     }
 
