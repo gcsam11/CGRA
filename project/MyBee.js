@@ -6,16 +6,21 @@ import { MyAntenna } from './Bee/MyAntenna.js';
 import { MyMandibles } from './Bee/MyMandibles.js';
 import { MyBeeEye } from './Bee/MyBeeEye.js';
 import { MyLegs } from './Bee/MyLegs.js';
+import { MyPollen } from './MyPollen.js';
 
 export class MyBee extends CGFobject {
     constructor(scene, s=3, e=5, st=1, d=2.5, x=0, y=0, z=0, orientationAngle = 0, speedVector = { x: 0, y: 0, z:0 }, speedFactor = 1){
         super(scene);
+
+        // Textures and Materials
         this.beeBodyTexture = new CGFtexture(this.scene, 'textures/beeStripes.jpg');
         this.beeBodyMaterial = new CGFappearance(this.scene);
         this.beeBodyMaterial.setTexture(this.beeBodyTexture);
         this.beeBodyMaterial.setTextureWrap('REPEAT', 'REPEAT');
         this.headMaterial = new CGFappearance(this.scene);
         this.material = new CGFappearance(this.scene);
+
+        // Components
         this.beeBody = new MyBeeBody(this.scene);
         this.stinger = new MyStinger(this.scene);
         this.wings = new MyWings(this.scene);
@@ -23,6 +28,9 @@ export class MyBee extends CGFobject {
         this.mandibles = new MyMandibles(this.scene);
         this.beeEye = new MyBeeEye(this.scene);
         this.legs = new MyLegs(this.scene);
+        this.pollen = new MyPollen(this.scene);
+
+        // Animation variables
         this.wingLength = 1.5;
         this.x = x;
         this.y = y;
@@ -32,6 +40,12 @@ export class MyBee extends CGFobject {
         this.speedFactor = speedFactor;
         this.turnFactor = Math.PI / 90;
         this.direction = 0;
+        this.hasPollen = true;
+        this.midAnimation = false;
+        this.hivePosition = null;
+        this.animStartTime = null;
+        this.turning = true;
+        this.getBackFromHive = false;
         
         this.startVal=s;
         this.endVal=e;
@@ -92,33 +106,25 @@ export class MyBee extends CGFobject {
 
     accelerate(){
         this.currentOrientationAngle = this.orientationAngle;
-        if(this.direction == 1){
-            this.speedVector.x += Math.cos(-this.currentOrientationAngle) * this.speedFactor;
-            this.speedVector.z += Math.sin(-this.currentOrientationAngle) * this.speedFactor;
-        }
-        else if(this.direction == -1){
-            this.speedVector.x -= Math.cos(-this.currentOrientationAngle) * this.speedFactor;
-            this.speedVector.z -= Math.sin(-this.currentOrientationAngle) * this.speedFactor;
-        }
-        else{
-            this.speedVector.x += Math.cos(-this.currentOrientationAngle) * this.speedFactor;
-            this.speedVector.z += Math.sin(-this.currentOrientationAngle) * this.speedFactor;
-        }
+         
+        this.speedVector.x += Math.cos(-this.currentOrientationAngle) * this.speedFactor;
+        this.speedVector.z += Math.sin(-this.currentOrientationAngle) * this.speedFactor;
     }
     
-    brake(){
-        this.currentOrientationAngle = this.orientationAngle;
-        if(this.direction == -1){
-            this.speedVector.x += Math.cos(-this.currentOrientationAngle) * this.speedFactor;
-            this.speedVector.z += Math.sin(-this.currentOrientationAngle) * this.speedFactor;
+    brake() {
+        // Define a brake factor less than 1 but greater than 0
+        var brakeFactor = 0.4;
+    
+        // Multiply the speed vector components by the brake factor
+        this.speedVector.x *= brakeFactor;
+        this.speedVector.z *= brakeFactor;
+    
+        // If the speed vector components are close to zero, set them to exactly zero
+        if (Math.abs(this.speedVector.x) < 0.1) {
+            this.speedVector.x = 0;
         }
-        else if(this.direction == 1){
-            this.speedVector.x -= Math.cos(-this.currentOrientationAngle) * this.speedFactor;
-            this.speedVector.z -= Math.sin(-this.currentOrientationAngle) * this.speedFactor;
-        }
-        else{
-            this.speedVector.x -= Math.cos(-this.currentOrientationAngle) * this.speedFactor;
-            this.speedVector.z -= Math.sin(-this.currentOrientationAngle) * this.speedFactor;
+        if (Math.abs(this.speedVector.z) < 0.1) {
+            this.speedVector.z = 0;
         }
     }
 
@@ -140,11 +146,31 @@ export class MyBee extends CGFobject {
         this.updateSpeedVector(this.orientationAngle);
     }
 
+    updateHasPollen(){
+        this.hasPollen = !this.hasPollen;
+    }
+
+    updateMidAnimation(){
+        this.midAnimation = !this.midAnimation;
+    }
+
+    transportToHive(targetX, targetY, targetZ){
+        if(this.hasPollen && !this.midAnimation){
+            this.updateMidAnimation();
+            this.hivePosition = {x: targetX, y: targetY, z: targetZ};
+            this.animStartTime = Date.now();
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     display(){
 
         this.scene.pushMatrix();
 
-        this.scene.translate(this.x, this.animVal, this.z);
+        this.scene.translate(this.x, this.y, this.z);
         this.scene.rotate(this.orientationAngle, 0, 1, 0);
         this.scene.rotate(-Math.PI/2, 0, 1, 0);
 
@@ -262,6 +288,15 @@ export class MyBee extends CGFobject {
         this.legs.display();
         this.scene.popMatrix();
 
+        if(this.hasPollen){
+            this.scene.pushMatrix();
+            this.scene.translate(0.5, Math.sin(Math.PI/4) - 1, -Math.cos(Math.PI/4) - 1.1);
+            this.scene.rotate(-Math.PI/2, 1, 0, 0);
+            this.scene.scale(0.2, 0.2, 0.2);
+            this.pollen.display();
+            this.scene.popMatrix();
+        }
+
         // Wings 
 
         this.scene.pushMatrix();
@@ -291,18 +326,145 @@ export class MyBee extends CGFobject {
         // Animation based on elapsed time since animation start
         var elapsedTimeSecs = timeSinceAppStart - this.animStartTimeSecs;
     
-        // Calculate a value that oscillates between -1 and 1 over time
-        var oscillation = Math.sin(elapsedTimeSecs * Math.PI * 2 / (this.animDurationSecs / this.speedFactor));
+        if(!this.midAnimation){
+            // Calculate a value that oscillates between -1 and 1 over time
+            var oscillation = Math.sin(elapsedTimeSecs * Math.PI * 2 / (this.animDurationSecs / this.speedFactor));
+
+            // Scale and shift the oscillation to the desired range
+            this.speedVector.y = this.startVal + oscillation * this.length;
+        }
+
+        this.goToHiveAnimation();
 
         var wingOscillation = Math.sin(elapsedTimeSecs * Math.PI * 2 / (0.25 / this.speedFactor));
-    
-        // Scale and shift the oscillation to the desired range
-        this.animVal = this.startVal + oscillation * this.length;
 
         this.wingAnimVal = wingOscillation;
 
         // Update x and z
         this.x += this.speedVector.x;
+        if(this.midAnimation){
+            this.y += this.speedVector.y;
+        }
+        else{        
+            this.y = this.speedVector.y;
+        }
         this.z += this.speedVector.z;
+    }
+
+    goToHiveAnimation(){
+        if(this.midAnimation && this.hivePosition != null){
+            this.goToHeight(this.hivePosition.y);
+
+            var differenceY = Math.abs(this.hivePosition.y - this.y);
+        
+            if(differenceY < 0.1){
+                // Turn to the place where the hive is
+                this.turnToTarget(this.hivePosition.x, this.hivePosition.z);
+            }
+        
+            if(!this.turning){
+                // Go to the hive
+                this.goToTarget(this.hivePosition.x, this.hivePosition.z);
+            }
+
+            var distanceToTarget = Math.sqrt(Math.pow(this.x - this.hivePosition.x, 2) + Math.pow(this.y - this.hivePosition.y, 2) + Math.pow(this.z - this.hivePosition.z, 2));
+        
+            // If the animation is finished, reset the target coordinates and the start time
+            if (distanceToTarget < 0.01) {
+                this.animStartTime = null;
+                this.hivePosition = null;
+                this.updateHasPollen();
+                this.getBackFromHive = true;
+            }
+        }
+
+        if(this.getBackFromHive){
+            this.getAwayFromHive();    
+
+            // If the bee has reached the target position, change getBackFromHive and MidAnimation
+            if (this.y <= 3.05) {
+                this.getBackFromHive = false;
+                this.updateMidAnimation();
+            }
+
+        }
+    }
+
+    // Make the bee go to a specific height
+    goToHeight(targetY) {
+        // Calculate the new speed vector
+        this.speedVector.x = 0;
+        this.speedVector.y = (targetY - this.y) * 0.1;
+        this.speedVector.z = 0;
+    }
+
+    turnToTarget(targetX, targetZ) {
+        this.turning = true;
+
+        // Calculate the angle between the current direction and the target direction
+        var targetAngle = Math.atan2(targetZ - this.z, targetX - this.x);
+
+        // Normalize targetAngle to the range [0, 2*Math.PI]
+        if (targetAngle < 0) {
+            targetAngle += 2 * Math.PI;
+        }
+
+        // Calculate the difference between the target angle and the current orientation
+        var angleDifference = targetAngle - this.orientationAngle;
+
+        // Adjust the angle difference to the range [-Math.PI, Math.PI]
+        while (angleDifference > Math.PI) {
+            angleDifference -= 2 * Math.PI;
+        }
+        while (angleDifference < -Math.PI) {
+            angleDifference += 2 * Math.PI;
+        }
+
+        // Add a fraction of the angle difference to the current orientation to smoothly turn the bee
+        this.orientationAngle += angleDifference * 0.1;
+
+        // Normalize orientationAngle to the range [0, 2*Math.PI]
+        if (this.orientationAngle < 0) {
+            this.orientationAngle += 2 * Math.PI;
+        }
+
+        // If the bee has reached the target direction, stop turning
+        if (Math.abs(angleDifference) < 0.01) {
+            this.turning = false;
+        }
+    }
+
+    goToTarget(targetX, targetZ) {
+        // Calculate the new speed vector
+        this.speedVector.x = (targetX - this.x) * 0.1;
+        this.speedVector.z = (targetZ - this.z) * 0.1;
+    }
+
+    getAwayFromHive() {
+        // Move to the new target position
+        this.goToTarget(10, 0);
+    
+        // Call updateAwayFromHive in the next frame
+        requestAnimationFrame(this.updateAwayFromHive.bind(this));
+    }
+    
+    updateAwayFromHive() {
+        // Update x, y, and z
+        this.x += this.speedVector.x * 0.1 * this.speedFactor;
+        this.y += this.speedVector.y * 0.1 * this.speedFactor;
+        this.z += this.speedVector.z * 0.1 * this.speedFactor;
+    
+        // Calculate the distance to the target position
+        var distanceToTarget = Math.sqrt(Math.pow(this.x - 10, 2) + Math.pow(this.y - this.y, 2) + Math.pow(this.z - 0, 2));
+    
+        // If the bee has reached the target position, go down
+        if (distanceToTarget <= 0.01) {
+            this.goToHeight(3);
+        }
+
+        // If the bee has not reached the target position, call updateAwayFromHive again in the next frame
+        else {
+            requestAnimationFrame(this.updateAwayFromHive.bind(this));
+        }
     }
 }

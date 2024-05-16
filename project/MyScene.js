@@ -39,8 +39,6 @@ export class MyScene extends CGFscene {
     this.appStartTime=Date.now(); // current time in milisecs
 
     this.animVal1=0;
-    this.animVal2=0;
-    this.animVal3=0;
 
     // Bee Animation values
     this.startVal=0;
@@ -48,6 +46,7 @@ export class MyScene extends CGFscene {
     this.animStartTimeSecs=2;
     this.animDurationSecs=3;
     this.length=(this.endVal-this.startVal);
+    this.oKeyPressed = false;
 
     this.beeSpeedVector = {x: 0, y: 0, z: 0};
 
@@ -105,6 +104,14 @@ export class MyScene extends CGFscene {
       //#endregion
       //#endregion
       //#endregion
+
+      var distanceToTarget = Math.sqrt(Math.pow(this.bee.x - this.hive.x, 2) + Math.pow(this.bee.y - (this.hive.y+2), 2) + Math.pow(this.bee.z - this.hive.z, 2));
+      console.log(this.bee.x, this.bee.y, this.bee.z);
+      console.log(distanceToTarget);
+      if(this.oKeyPressed && distanceToTarget < 0.01){
+        this.hive.updateThisCurrPollenAdd();
+        this.oKeyPressed = false;
+      }
   }
   checkKeys() {
     var text = "Keys pressed: ";
@@ -113,28 +120,12 @@ export class MyScene extends CGFscene {
     if (this.gui.isKeyPressed("KeyW")) {
       text += " W ";
       keysPressed = true;
-      if(this.bee.direction == 1){
-        this.bee.accelerate();
-      }
-      else if(this.bee.direction == -1){
-        this.bee.brake();
-      }
-      else{
-        this.bee.accelerate();
-      }
+      this.bee.accelerate();
     }
     if (this.gui.isKeyPressed("KeyS")) {
       text += " S ";
       keysPressed = true;
-      if(this.bee.direction == 1){
-        this.bee.brake();
-      }
-      else if(this.bee.direction == -1){
-        this.bee.accelerate();
-      }
-      else{
-        this.bee.brake();
-      }
+      this.bee.brake();
     }
     if(this.gui.isKeyPressed("KeyA")){
       text += " A ";
@@ -150,6 +141,16 @@ export class MyScene extends CGFscene {
       text += " R ";
       keysPressed = true;
       this.bee.resetPos();
+    }
+    if (this.gui.isKeyPressed("KeyO")){
+      text += " O ";
+      keysPressed = true;
+      if(this.bee.transportToHive(this.hive.x, this.hive.y+2, this.hive.z)){
+        this.oKeyPressed = true;
+      }
+      else{
+        text += "\n Couldn't perform animation";
+      }
     }
     if (keysPressed)
       console.log(text);
@@ -216,12 +217,12 @@ export class MyScene extends CGFscene {
     
     //this.flower.display();
 
-    /*
+    
     // Bee
     this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     this.bee.display();
-    this.popMatrix();*/
+    this.popMatrix();
 
     // Hive
     this.pushMatrix();
