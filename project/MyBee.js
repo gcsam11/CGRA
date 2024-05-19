@@ -40,12 +40,15 @@ export class MyBee extends CGFobject {
         this.speedFactor = speedFactor;
         this.turnFactor = Math.PI / 90;
         this.direction = 0;
-        this.hasPollen = true;
+        this.hasPollen = false;
         this.midAnimation = false;
         this.hivePosition = null;
         this.animStartTime = null;
         this.turning = true;
         this.getBackFromHive = false;
+        this.closestFlower = null;
+        this.waitingForP = true;
+        this.previousSpeedVector = null;
         
         this.startVal=s;
         this.endVal=e;
@@ -164,6 +167,30 @@ export class MyBee extends CGFobject {
         else{
             return false;
         }
+    }
+
+    findClosestFlower(garden){
+        if(!this.hasPollen && !this.midAnimation){
+            this.updateMidAnimation();
+            this.animStartTime = Date.now();
+            var closestFlower
+            var minDistance = Infinity;
+
+            for (var i = 0; i < garden.flowers.length; i++) {
+                var flower = garden.flowers[i];
+                var distance = Math.sqrt(Math.pow(this.x - flower.x, 2) + Math.pow(this.y - flower.y, 2) + Math.pow(this.z - flower.z, 2));
+
+                if (distance < minDistance && flower.hasPollen) {
+                    minDistance = distance;
+                    closestFlower = flower;
+                }
+            }
+
+            this.closestFlower = closestFlower;
+
+            return true;
+        }
+        return false;
     }
 
     display(){
@@ -336,6 +363,8 @@ export class MyBee extends CGFobject {
 
         this.goToHiveAnimation();
 
+        this.goToFlower();
+
         var wingOscillation = Math.sin(elapsedTimeSecs * Math.PI * 2 / (0.25 / this.speedFactor));
 
         this.wingAnimVal = wingOscillation;
@@ -345,15 +374,48 @@ export class MyBee extends CGFobject {
         if(this.midAnimation){
             this.y += this.speedVector.y;
         }
-        else{        
+        else if(this.waitingForP){     
             this.y = this.speedVector.y;
+        }
+        else{
+            this.speedVector.y = 0;
+            this.y += this.speedVector.y;
         }
         this.z += this.speedVector.z;
     }
 
+    goToFlower(){
+        if(this.midAnimation && this.closestFlower != null){
+            this.previousSpeedVector = this.speedVector;
+            this.waitingForP = false;
+
+            var closestFlowerZ = this.closestFlower.z + 2;
+            // Calculate the new speed vector
+            this.speedVector.x = (this.closestFlower.x - this.x) * 0.1;
+            this.speedVector.y = (this.closestFlower.y - this.y) * 0.1;
+            this.speedVector.z = (closestFlowerZ - this.z) * 0.1;
+
+            // If the bee has reached the flower, reset the target coordinates and the start time
+            var distanceToTarget = Math.sqrt(Math.pow(this.x - this.closestFlower.x, 2) + Math.pow(this.y - this.closestFlower.y, 2) + Math.pow(this.z - closestFlowerZ, 2));
+
+            // If the bee has reached the flower, reset the target coordinates and the start time
+            if (distanceToTarget < 0.1) { // Adjust this value as needed
+                this.turnToTarget(this.closestFlower.x, this.closestFlower.z);
+                if(!this.turning){
+                    this.closestFlower.updateHasPollen();
+                    this.updateHasPollen();
+                    this.speedVector.x = 0;
+                    this.speedVector.z = 0;
+                    this.closestFlower = null;
+                    this.midAnimation = false;
+                }
+            }
+        }    
+    }
+
     goToHiveAnimation(){
         if(this.midAnimation && this.hivePosition != null){
-            this.goToHeight(this.hivePosition.y);
+            this.goToHeight(0, this.hivePosition.y, 0);
 
             var differenceY = Math.abs(this.hivePosition.y - this.y);
         
@@ -391,11 +453,11 @@ export class MyBee extends CGFobject {
     }
 
     // Make the bee go to a specific height
-    goToHeight(targetY) {
+    goToHeight(speedVectorX, targetY, speedVectorZ) {
         // Calculate the new speed vector
-        this.speedVector.x = 0;
+        this.speedVector.x = speedVectorX;
         this.speedVector.y = (targetY - this.y) * 0.1;
-        this.speedVector.z = 0;
+        this.speedVector.z = speedVectorZ;
     }
 
     turnToTarget(targetX, targetZ) {
@@ -459,7 +521,7 @@ export class MyBee extends CGFobject {
     
         // If the bee has reached the target position, go down
         if (distanceToTarget <= 0.01) {
-            this.goToHeight(3);
+            this.goToHeight(0, 3, 0);
         }
 
         // If the bee has not reached the target position, call updateAwayFromHive again in the next frame

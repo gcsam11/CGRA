@@ -47,6 +47,7 @@ export class MyScene extends CGFscene {
     this.animDurationSecs=3;
     this.length=(this.endVal-this.startVal);
     this.oKeyPressed = false;
+    this.fkeysPressed = false;
 
     this.beeSpeedVector = {x: 0, y: 0, z: 0};
 
@@ -106,8 +107,6 @@ export class MyScene extends CGFscene {
       //#endregion
 
       var distanceToTarget = Math.sqrt(Math.pow(this.bee.x - this.hive.x, 2) + Math.pow(this.bee.y - (this.hive.y+2), 2) + Math.pow(this.bee.z - this.hive.z, 2));
-      console.log(this.bee.x, this.bee.y, this.bee.z);
-      console.log(distanceToTarget);
       if(this.oKeyPressed && distanceToTarget < 0.01){
         this.hive.updateThisCurrPollenAdd();
         this.oKeyPressed = false;
@@ -116,6 +115,7 @@ export class MyScene extends CGFscene {
   checkKeys() {
     var text = "Keys pressed: ";
     var keysPressed = false;
+    var fKeysPressed = false;
     // Check for key codes e.g. in https://keycode.info/
     if (this.gui.isKeyPressed("KeyW")) {
       text += " W ";
@@ -152,9 +152,28 @@ export class MyScene extends CGFscene {
         text += "\n Couldn't perform animation";
       }
     }
+    if(this.gui.isKeyPressed("KeyF")){
+      text += " F ";
+      keysPressed = true;
+      if(this.bee.findClosestFlower(this.garden)){
+        this.fKeysPressed = true;
+      }
+      else{
+        text += "\n Couldn't perform animation";
+      }
+    }
+    if(this.gui.isKeyPressed("KeyP")){
+      text += " P ";
+      keysPressed = true;
+      if(this.fKeysPressed){
+        this.bee.waitingForP = true;
+        this.bee.speedVector = this.bee.previousSpeedVector;
+        this.fKeysPressed = false;
+      }
+    }
     if (keysPressed)
       console.log(text);
-  }  
+  }
   initLights() {
     this.lights[0].setPosition(15, 0, 5, 1);
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
@@ -191,32 +210,19 @@ export class MyScene extends CGFscene {
     // Draw axis
     if (this.displayAxis) this.axis.display();
 
-/*  // Panorama
-    this.pushMatrix();
+    // Panorama
+    /*this.pushMatrix();
     this.skybox.apply();
     this.rotate(Math.PI, 1, 0,0);
     this.panorama.display();
-    this.popMatrix();
+    this.popMatrix();*/
     
     // ---- BEGIN Primitive drawing section
 
-    // Plane
-    /*this.pushMatrix();
-    this.appearance.apply();
-    this.translate(0,-100,0);
-    this.scale(400,400,400);
-    this.rotate(-Math.PI/2.0,1,0,0);
-    this.plane.display();
-    this.popMatrix();
-
     // Flowers
-    /*this.pushMatrix();
-    this.translate(-50, -50, -50);
+    this.pushMatrix();
     this.garden.display();
-    this.popMatrix();*/
-    
-    //this.flower.display();
-
+    this.popMatrix();
     
     // Bee
     this.pushMatrix();
