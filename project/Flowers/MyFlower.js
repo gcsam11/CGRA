@@ -3,9 +3,10 @@ import { MyPetal } from './MyPetal.js';
 import { MyReceptacle } from './MyReceptacle.js';
 import { MyStem } from './MyStem.js';
 import { MyLeaf } from './MyLeaf.js';
+import { MyPollen } from '../MyPollen.js';
 
 export class MyFlower extends CGFobject {
-    constructor(scene, externalRadius, receptacleRadius, petalUpperAngle, petalLowerAngle, petalNumber, stemSize, stemRadius, petalColor, stemColor, receptacleColor, leafColor, stemLength) {
+    constructor(scene, externalRadius, receptacleRadius, petalUpperAngle, petalLowerAngle, petalNumber, stemSize, stemRadius, petalColor, stemColor, receptacleColor, leafColor, stemLength, stemAngle) {
         super(scene);
         // Define maximum values
         const maxExternalRadius = 4;
@@ -29,11 +30,19 @@ export class MyFlower extends CGFobject {
         this.receptacleColor = receptacleColor || [1, 1, 0, 1]; //yellow
         this.leafColor = leafColor || [0, 1, 0, 1]; //green
         this.stemLength = stemLength || 1;
+        this.stemAngle = stemAngle || 80;
+
+        this.hasPollen = true;
 
         this.receptacle = new MyReceptacle(this.scene, this.receptacleRadius, this.receptacleColor);
         this.petal = new MyPetal(this.scene, this.petalUpperAngle, this.petalLowerAngle, this.petalHeight, this.petalColor);
         this.stem = new MyStem(this.scene, this.stemRadius, this.stemColor, this.leafColor, this.stemLength);
         this.myLeaf = new MyLeaf(this.scene, this.leafColor);
+        this.pollen = new MyPollen(this.scene);
+
+        this.x = 0;
+        this.y = 3.2 - this.stemLength * this.stemSize;
+        this.z = 0;
 
         this.initBuffers();
     }
@@ -44,19 +53,34 @@ export class MyFlower extends CGFobject {
         this.normals = [];
     }
 
-    display() {
+    updateHasPollen(){
+        this.hasPollen = !this.hasPollen;
+    }
 
-        //this.receptacle.display();
+    display() {
+        this.scene.pushMatrix();
+        this.scene.translate(0, 0, 0);
+        this.scene.rotate(Math.PI / 2, 1, 0, 0); // Rotate the garden to be horizontal
+
+        this.receptacle.display();
+
+        if(this.hasPollen){
+            this.scene.pushMatrix();
+            this.scene.translate(0, this.receptacleRadius * 0.5, 0);
+            this.scene.scale(0.2, 0.2, 0.2);
+            this.pollen.display();
+            this.scene.popMatrix();
+        }
 
         this.scene.pushMatrix();
         this.scene.translate(0, 0, this.receptacleRadius-0.1);
         this.stem.display();
         this.scene.popMatrix();
-        var stemAngle = 80 * Math.PI / 180;
+        var stemAngle = this.stemAngle * Math.PI / 180;
         var y = 0;
 
         var stemHeight = this.stemLength; // Each stack represents a portion of the stem's height
-        for (var i = 1; i < 3; i++) {
+        for (var i = 1; i < this.stemSize; i++) {
             // Calculate the new y and z coordinates
             if(i != 1){
                 y += Math.cos(stemAngle);
@@ -81,8 +105,10 @@ export class MyFlower extends CGFobject {
         for (var i = 0; i < this.petalNumber; i++) {
             this.scene.pushMatrix();
             this.scene.rotate(maxAng * i * Math.PI / 180, 0, 1, 0);
-            //this.petal.display();
+            this.petal.display();
             this.scene.popMatrix();
         }
+
+        this.scene.popMatrix();
     }
 }

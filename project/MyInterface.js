@@ -20,8 +20,8 @@ export class MyInterface extends CGFinterface {
         //Checkbox element in GUI
         this.gui.add(this.scene, 'displayAxis').name('Display Axis');
 
-        this.gui.add(this.scene, 'scaleFactor', 0.5, 3.0).name('Scale');
-        this.gui.add(this.scene, 'speedFactor', 0.1, 3.0).onChange(this.scene.updateSpeedFactor.bind(this.scene));
+        this.gui.add(this.scene, 'scaleFactor', 0.5, 3.0).name('Scale Factor');
+        this.gui.add(this.scene, 'speedFactor', 0.1, 3.0).name('Speed Factor').onChange(this.scene.updateSpeedFactor.bind(this.scene));
 
         this.initKeys();
 

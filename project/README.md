@@ -4,6 +4,10 @@
 
 ![Panorama](./images/project-t07g09-1.png)
 
+## Flowers
+
+![Flowers](./images/project-t07g09-2.png)
+
 ## Bee Model 
 
 ![Bee Model](./images/project-t07g09-4.png)

@@ -1,13 +1,20 @@
-import { CGFappearance, CGFobject} from '../../lib/CGF.js';
+import { CGFappearance, CGFobject, CGFtexture} from '../../lib/CGF.js';
 
 export class MyReceptacle extends CGFobject {
     constructor(scene, radius, color, slices, stacks) {
         super(scene);
         this.radius = radius || 0.5;
-        this.slices = slices || 12; // Number of horizontal slices
-        this.stacks = stacks || 12; // Number of vertical stacks
+        this.slices = slices || 20; // Number of horizontal slices
+        this.stacks = stacks || 10; // Number of vertical stacks
         this.color = color;
-        this.material = new CGFappearance(this.scene);
+        this.receptacleTexture = new CGFtexture(this.scene, 'textures/flowerCentre.jpg');
+        this.receptacleMaterial = new CGFappearance(this.scene);
+        this.receptacleMaterial.setTexture(this.receptacleTexture);
+        this.receptacleMaterial.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
+        this.receptacleMaterial.setAmbient(...this.color);
+        this.receptacleMaterial.setDiffuse(...this.color);
+        this.receptacleMaterial.setSpecular(...this.color);
+        this.receptacleMaterial.setShininess(10.0);
         this.initBuffers();
     }
 
@@ -52,18 +59,13 @@ export class MyReceptacle extends CGFobject {
                 this.indices.push(first + 1, second + 1, second);
             }
         }
-
-        this.material.setAmbient(...this.color);
-        this.material.setDiffuse(...this.color);
-        this.material.setSpecular(...this.color);
-        this.material.setShininess(10.0);
     
         this.primitiveType = this.scene.gl.TRIANGLES;
         this.initGLBuffers();
     }
 
     display(){
-        this.material.apply();
+        this.receptacleMaterial.apply();
         this.scene.pushMatrix();
         this.scene.scale(1, 0.5, 1); // Scale the sphere in the y-axis to half its size
         super.display();

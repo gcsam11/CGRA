@@ -29,12 +29,14 @@ export class MyWings extends CGFobject {
         this.scene.pushMatrix();
         this.scene.translate(1.25, 0, 0);
 
+        // Forewing
         this.scene.pushMatrix();
         this.wingsMaterial.apply();
         this.scene.scale(1.5, 0.05, 0.6);
         this.sphere.display();
         this.scene.popMatrix();
 
+        // Hindwing
         this.scene.pushMatrix();
         this.wingsMaterial.apply();
         this.scene.translate(-0.65, 0, 1);
