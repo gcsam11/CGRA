@@ -7,6 +7,10 @@ import { MyFlower } from "./Flowers/MyFlower.js";
 import { MyBee } from "./MyBee.js"
 import { MyPollen } from "./MyPollen.js";
 import { MyHive } from "./MyHive.js";
+import { MyRock } from "./MyRock.js";
+import {MyRockSpawn} from "./MyRockSpawn.js";
+import {MyRockSet} from "./MyRockSet.js";
+import { MyGrass } from "./MyGrass.js";
 
 /**
  * MyScene
@@ -66,14 +70,25 @@ export class MyScene extends CGFscene {
     this.animObjs = [this.bee];
     this.numAnimObjs = 1;
 
+    this.rockSpawn = new MyRockSpawn(this); 
+    this.rockSet = new MyRockSet(this);
+    this.rock = new MyRock(this);
+    this.grass = new MyGrass(this);
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.speedFactor = 1;
     this.scaleFactor = 1;
 
+    //shaders
+    this.grassShader = new CGFshader(this.gl, "shaders/grass.vert", "shaders/grass.frag");
+    this.grassShader.setUniformsValues({uTime: 0});
+
+    this.setUpdatePeriod(100);
+
+    //Textures
     this.enableTextures(true);
 
-    this.texture = new CGFtexture(this, "textures/terrain.jpg");
+    this.texture = new CGFtexture(this, "textures/grassGroundII.jpg");
     this.appearance = new CGFappearance(this);
     this.appearance.setTexture(this.texture);
     this.appearance.setTextureWrap('REPEAT', 'REPEAT');
@@ -175,7 +190,7 @@ export class MyScene extends CGFscene {
       console.log(text);
   }
   initLights() {
-    this.lights[0].setPosition(15, 0, 5, 1);
+    this.lights[0].setPosition(15, 70, 5, 1);
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
     this.lights[0].enable();
     this.lights[0].update();
@@ -195,6 +210,11 @@ export class MyScene extends CGFscene {
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.setShininess(10.0);
   }
+
+  update(t) {
+    this.grassShader.setUniformsValues({uTime: t/100 % (2*Math.PI)});
+  }
+
   display() {
     
     // ---- BEGIN Background, camera and axis setup
@@ -211,6 +231,11 @@ export class MyScene extends CGFscene {
     if (this.displayAxis) this.axis.display();
 
     // Panorama
+    /*this.pushMatrix();
+    this.eyeball.apply();
+    this.sphere.display();
+    this.popMatrix();*/
+
     /*this.pushMatrix();
     this.skybox.apply();
     this.rotate(Math.PI, 1, 0,0);
@@ -235,6 +260,16 @@ export class MyScene extends CGFscene {
     this.hive.display();
     this.popMatrix();
   
+    //this.flower.display();
+    this.setActiveShader(this.grassShader);
+    this.grass.display();
+    this.setActiveShader(this.defaultShader);
+    this.rockSpawn.display();
+
+    this.pushMatrix(); 
+    this.scale(2,2,2);
+    this.rockSet.display();
+    this.popMatrix();
 
     // ---- END Primitive drawing section
   }
