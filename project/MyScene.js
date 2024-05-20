@@ -6,6 +6,7 @@ import { MyGarden } from "./myGarden.js";
 import { MyFlower } from "./Flowers/MyFlower.js";
 import { MyRock } from "./MyRock.js";
 import {MyRockSpawn} from "./MyRockSpawn.js";
+import {MyRockSet} from "./MyRockSet.js";
 import { MyGrass } from "./MyGrass.js";
 
 /**
@@ -38,6 +39,7 @@ export class MyScene extends CGFscene {
     this.garden = new MyGarden(this);
     this.flower = new MyFlower(this);
     this.rockSpawn = new MyRockSpawn(this); 
+    this.rockSet = new MyRockSet(this);
     this.rock = new MyRock(this);
     this.grass = new MyGrass(this);
     //Objects connected to MyInterface
@@ -117,7 +119,7 @@ export class MyScene extends CGFscene {
     this.sphere.display();
     this.popMatrix();*/
 
-    this.pushMatrix();
+    /*this.pushMatrix();
     this.skybox.apply();
     this.rotate(Math.PI, 1, 0,0);
     this.panorama.display();
@@ -142,7 +144,9 @@ export class MyScene extends CGFscene {
     this.setActiveShader(this.grassShader);
     this.grass.display();
     this.setActiveShader(this.defaultShader);
-    this.rockSpawn.display();
+    this.rockSpawn.display();*/
+
+    this.rockSet.display();
 
     // ---- END Primitive drawing section
   }
