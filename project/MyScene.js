@@ -143,10 +143,13 @@ export class MyScene extends CGFscene {
     //this.flower.display();
     this.setActiveShader(this.grassShader);
     this.grass.display();
-    this.setActiveShader(this.defaultShader);
-    this.rockSpawn.display();*/
+    this.setActiveShader(this.defaultShader);*/
+    this.rockSpawn.display();
 
+    this.pushMatrix(); 
+    this.scale(2,2,2);
     this.rockSet.display();
+    this.popMatrix();
 
     // ---- END Primitive drawing section
   }
