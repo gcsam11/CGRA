@@ -5,7 +5,7 @@ export class MyGarden extends CGFobject {
     constructor(scene, leafColor, stacks, slices){
         super(scene);
         this.slices = slices || 20;
-        this.stacks = stacks || 20;
+        this.stacks = stacks || 5;
         this.radius = 0.05;
         this.leafColor = leafColor;
         this.material = new CGFappearance(this.scene);
@@ -34,9 +34,9 @@ export class MyGarden extends CGFobject {
         for (var i = 0; i < 5; i++) {
             for (var j = 0; j < 3; j++) {
                 var flower = this.flowersCreate[index];
-                flower.x = i * 10 - 10;
+                flower.x = i * 10 - 25 - this.getRandomInt(1, 4);
                 flower.y = flower.stemLength * flower.stemSize;
-                flower.z = j * 10 + 10;
+                flower.z = j * 10 + 10 + this.getRandomInt(1, 4);
                 this.flowers.push(flower);
                 index++;
             }

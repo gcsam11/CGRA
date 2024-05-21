@@ -2,16 +2,28 @@
 
 ## Panorama
 
-![Panorama](./images/project-t07g09-1.png)
+![Panorama](./screenshots/project-t07g09-1.png)
 
 ## Flowers
 
-![Flowers](./images/project-t07g09-2.png)
+![Flowers](./screenshots/project-t07g09-2.png)
+
+## Rocks
+
+![Rocks](./screenshots/project-t07g09-3.png)
 
 ## Bee Model 
 
-![Bee Model](./images/project-t07g09-4.png)
+![Bee Model](./screenshots/project-t07g09-4.png)
 
 ## Bee Animation + Control + Model
 
-![Complete Bee](./images/project-t07g09-5.png)
+![Complete Bee](./screenshots/project-t07g09-5.png)
+
+## Pollen And Hive
+
+![Pollen and Hive](./screenshots/project-t07g09-6.png)
+
+## Grass
+
+![Grass](./screenshots/project-t07g09-7.png)

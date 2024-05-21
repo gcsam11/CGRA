@@ -83,15 +83,10 @@ export class MyScene extends CGFscene {
     this.grassShader = new CGFshader(this.gl, "shaders/grass.vert", "shaders/grass.frag");
     this.grassShader.setUniformsValues({uTime: 0});
 
-    this.setUpdatePeriod(100);
+    this.setUpdatePeriod(50);
 
     //Textures
     this.enableTextures(true);
-
-    this.texture = new CGFtexture(this, "textures/grassGroundII.jpg");
-    this.appearance = new CGFappearance(this);
-    this.appearance.setTexture(this.texture);
-    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
     // Panorama Texture
     this.sky = new CGFtexture(this, "textures/panorama2.jpg");
@@ -99,6 +94,11 @@ export class MyScene extends CGFscene {
     this.skybox.setTexture(this.sky);
     this.skybox.setTextureWrap('REPEAT', 'REPEAT');
 
+    // Plane Texture
+    this.planeTexture = new CGFtexture(this,  "textures/grassGroundII.jpg");
+    this.planeAppearance = new CGFappearance(this);
+    this.planeAppearance.setTexture(this.planeTexture);
+    this.planeAppearance.setTextureWrap('REPEAT', 'REPEAT');
   }
   updateSpeedFactor(){
     this.bee.updateSpeedFactor(this.speedFactor);
@@ -106,6 +106,7 @@ export class MyScene extends CGFscene {
   update(t)
   {
       this.checkKeys();
+
       // Update without considering time - BAD
       this.animVal1+=0.1;
 
@@ -121,11 +122,15 @@ export class MyScene extends CGFscene {
       //#endregion
       //#endregion
 
-      var distanceToTarget = Math.sqrt(Math.pow(this.bee.x - this.hive.x, 2) + Math.pow(this.bee.y - (this.hive.y+2), 2) + Math.pow(this.bee.z - this.hive.z, 2));
-      if(this.oKeyPressed && distanceToTarget < 0.01){
-        this.hive.updateThisCurrPollenAdd();
-        this.oKeyPressed = false;
+      if(this.oKeyPressed){
+        var distanceToTarget = Math.sqrt(Math.pow(this.bee.x - this.hive.x, 2) + Math.pow(this.bee.y - (this.hive.y+2), 2) + Math.pow(this.bee.z - this.hive.z, 2));
+        if(distanceToTarget <= 0.1){
+          this.hive.updateThisCurrPollenAdd();
+          this.oKeyPressed = false;
+        }
       }
+
+      this.grassShader.setUniformsValues({uTime: t/100 % (2*Math.PI)});
   }
   checkKeys() {
     var text = "Keys pressed: ";
@@ -211,10 +216,6 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
-  update(t) {
-    this.grassShader.setUniformsValues({uTime: t/100 % (2*Math.PI)});
-  }
-
   display() {
     
     // ---- BEGIN Background, camera and axis setup
@@ -230,45 +231,55 @@ export class MyScene extends CGFscene {
     // Draw axis
     if (this.displayAxis) this.axis.display();
 
+    
     // Panorama
-    /*this.pushMatrix();
-    this.eyeball.apply();
-    this.sphere.display();
-    this.popMatrix();*/
-
-    /*this.pushMatrix();
+    this.pushMatrix();
     this.skybox.apply();
     this.rotate(Math.PI, 1, 0,0);
     this.panorama.display();
-    this.popMatrix();*/
+    this.popMatrix();
+
+    // Plane
+    this.pushMatrix();
+    this.planeAppearance.apply();
+    this.translate(0, -1, 0);
+    this.scale(300, 1, 300);
+    this.rotate(-Math.PI/2, 1, 0, 0);
+    this.plane.display();
+    this.popMatrix();
     
     // ---- BEGIN Primitive drawing section
+
+    this.pushMatrix();
+    this.setActiveShader(this.grassShader);
+    this.grass.display();
+    this.popMatrix();
+
+    this.pushMatrix();
+    this.setActiveShader(this.defaultShader);
+    this.rockSpawn.display();
+    this.popMatrix();
 
     // Flowers
     this.pushMatrix();
     this.garden.display();
-    this.popMatrix();
-    
-    // Bee
-    this.pushMatrix();
-    this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-    this.bee.display();
     this.popMatrix();
 
     // Hive
     this.pushMatrix();
     this.hive.display();
     this.popMatrix();
-  
-    //this.flower.display();
-    this.setActiveShader(this.grassShader);
-    this.grass.display();
-    this.setActiveShader(this.defaultShader);
-    this.rockSpawn.display();
 
     this.pushMatrix(); 
     this.scale(2,2,2);
+    this.translate(10, 0, 0);
     this.rockSet.display();
+    this.popMatrix();
+
+    // Bee
+    this.pushMatrix();
+    this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
+    this.bee.display();
     this.popMatrix();
 
     // ---- END Primitive drawing section
