@@ -214,20 +214,11 @@ export class MyScene extends CGFscene {
     this.garden.display();
     this.popMatrix();*/
     
-    //this.flower.display();
-
-    /*
     // Bee
     this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     this.bee.display();
-    this.popMatrix();*/
-
-    // Hive
-    this.pushMatrix();
-    this.hive.display();
     this.popMatrix();
-  
 
     // ---- END Primitive drawing section
   }
