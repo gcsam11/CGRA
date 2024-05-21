@@ -83,15 +83,10 @@ export class MyScene extends CGFscene {
     this.grassShader = new CGFshader(this.gl, "shaders/grass.vert", "shaders/grass.frag");
     this.grassShader.setUniformsValues({uTime: 0});
 
-    this.setUpdatePeriod(100);
+    this.setUpdatePeriod(50);
 
     //Textures
     this.enableTextures(true);
-
-    this.texture = new CGFtexture(this, "textures/grassGroundII.jpg");
-    this.appearance = new CGFappearance(this);
-    this.appearance.setTexture(this.texture);
-    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
     // Panorama Texture
     this.sky = new CGFtexture(this, "textures/panorama2.jpg");
@@ -100,7 +95,7 @@ export class MyScene extends CGFscene {
     this.skybox.setTextureWrap('REPEAT', 'REPEAT');
 
     // Plane Texture
-    this.planeTexture = new CGFtexture(this, "textures/terrain.jpg");
+    this.planeTexture = new CGFtexture(this,  "textures/grassGroundII.jpg");
     this.planeAppearance = new CGFappearance(this);
     this.planeAppearance.setTexture(this.planeTexture);
     this.planeAppearance.setTextureWrap('REPEAT', 'REPEAT');
@@ -248,7 +243,7 @@ export class MyScene extends CGFscene {
     this.pushMatrix();
     this.planeAppearance.apply();
     this.translate(0, -1, 0);
-    this.scale(100, 1, 100);
+    this.scale(300, 1, 300);
     this.rotate(-Math.PI/2, 1, 0, 0);
     this.plane.display();
     this.popMatrix();
@@ -282,10 +277,10 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     // Bee
-    /*this.pushMatrix();
+    this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     this.bee.display();
-    this.popMatrix();*/
+    this.popMatrix();
 
     // ---- END Primitive drawing section
   }

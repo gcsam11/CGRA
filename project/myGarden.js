@@ -34,9 +34,9 @@ export class MyGarden extends CGFobject {
         for (var i = 0; i < 5; i++) {
             for (var j = 0; j < 3; j++) {
                 var flower = this.flowersCreate[index];
-                flower.x = i * 10 - 10;
+                flower.x = i * 10 - 25 - this.getRandomInt(1, 4);
                 flower.y = flower.stemLength * flower.stemSize;
-                flower.z = j * 10 + 10;
+                flower.z = j * 10 + 10 + this.getRandomInt(1, 4);
                 this.flowers.push(flower);
                 index++;
             }
