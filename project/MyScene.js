@@ -7,6 +7,10 @@ import { MyFlower } from "./Flowers/MyFlower.js";
 import { MyBee } from "./MyBee.js"
 import { MyPollen } from "./MyPollen.js";
 import { MyHive } from "./MyHive.js";
+import { MyRock } from "./MyRock.js";
+import {MyRockSpawn} from "./MyRockSpawn.js";
+import {MyRockSet} from "./MyRockSet.js";
+import { MyGrass } from "./MyGrass.js";
 
 /**
  * MyScene
@@ -39,8 +43,6 @@ export class MyScene extends CGFscene {
     this.appStartTime=Date.now(); // current time in milisecs
 
     this.animVal1=0;
-    this.animVal2=0;
-    this.animVal3=0;
 
     // Bee Animation values
     this.startVal=0;
@@ -48,6 +50,8 @@ export class MyScene extends CGFscene {
     this.animStartTimeSecs=2;
     this.animDurationSecs=3;
     this.length=(this.endVal-this.startVal);
+    this.oKeyPressed = false;
+    this.fkeysPressed = false;
 
     this.beeSpeedVector = {x: 0, y: 0, z: 0};
 
@@ -66,14 +70,25 @@ export class MyScene extends CGFscene {
     this.animObjs = [this.bee];
     this.numAnimObjs = 1;
 
+    this.rockSpawn = new MyRockSpawn(this); 
+    this.rockSet = new MyRockSet(this);
+    this.rock = new MyRock(this);
+    this.grass = new MyGrass(this);
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.speedFactor = 1;
     this.scaleFactor = 1;
 
+    //shaders
+    this.grassShader = new CGFshader(this.gl, "shaders/grass.vert", "shaders/grass.frag");
+    this.grassShader.setUniformsValues({uTime: 0});
+
+    this.setUpdatePeriod(100);
+
+    //Textures
     this.enableTextures(true);
 
-    this.texture = new CGFtexture(this, "textures/terrain.jpg");
+    this.texture = new CGFtexture(this, "textures/grassGroundII.jpg");
     this.appearance = new CGFappearance(this);
     this.appearance.setTexture(this.texture);
     this.appearance.setTextureWrap('REPEAT', 'REPEAT');
@@ -84,6 +99,11 @@ export class MyScene extends CGFscene {
     this.skybox.setTexture(this.sky);
     this.skybox.setTextureWrap('REPEAT', 'REPEAT');
 
+    // Plane Texture
+    this.planeTexture = new CGFtexture(this, "textures/terrain.jpg");
+    this.planeAppearance = new CGFappearance(this);
+    this.planeAppearance.setTexture(this.planeTexture);
+    this.planeAppearance.setTextureWrap('REPEAT', 'REPEAT');
   }
   updateSpeedFactor(){
     this.bee.updateSpeedFactor(this.speedFactor);
@@ -91,6 +111,7 @@ export class MyScene extends CGFscene {
   update(t)
   {
       this.checkKeys();
+
       // Update without considering time - BAD
       this.animVal1+=0.1;
 
@@ -105,36 +126,31 @@ export class MyScene extends CGFscene {
       //#endregion
       //#endregion
       //#endregion
+
+      if(this.oKeyPressed){
+        var distanceToTarget = Math.sqrt(Math.pow(this.bee.x - this.hive.x, 2) + Math.pow(this.bee.y - (this.hive.y+2), 2) + Math.pow(this.bee.z - this.hive.z, 2));
+        if(distanceToTarget <= 0.1){
+          this.hive.updateThisCurrPollenAdd();
+          this.oKeyPressed = false;
+        }
+      }
+
+      this.grassShader.setUniformsValues({uTime: t/100 % (2*Math.PI)});
   }
   checkKeys() {
     var text = "Keys pressed: ";
     var keysPressed = false;
+    var fKeysPressed = false;
     // Check for key codes e.g. in https://keycode.info/
     if (this.gui.isKeyPressed("KeyW")) {
       text += " W ";
       keysPressed = true;
-      if(this.bee.direction == 1){
-        this.bee.accelerate();
-      }
-      else if(this.bee.direction == -1){
-        this.bee.brake();
-      }
-      else{
-        this.bee.accelerate();
-      }
+      this.bee.accelerate();
     }
     if (this.gui.isKeyPressed("KeyS")) {
       text += " S ";
       keysPressed = true;
-      if(this.bee.direction == 1){
-        this.bee.brake();
-      }
-      else if(this.bee.direction == -1){
-        this.bee.accelerate();
-      }
-      else{
-        this.bee.brake();
-      }
+      this.bee.brake();
     }
     if(this.gui.isKeyPressed("KeyA")){
       text += " A ";
@@ -151,11 +167,40 @@ export class MyScene extends CGFscene {
       keysPressed = true;
       this.bee.resetPos();
     }
+    if (this.gui.isKeyPressed("KeyO")){
+      text += " O ";
+      keysPressed = true;
+      if(this.bee.transportToHive(this.hive.x, this.hive.y+2, this.hive.z)){
+        this.oKeyPressed = true;
+      }
+      else{
+        text += "\n Couldn't perform animation";
+      }
+    }
+    if(this.gui.isKeyPressed("KeyF")){
+      text += " F ";
+      keysPressed = true;
+      if(this.bee.findClosestFlower(this.garden)){
+        this.fKeysPressed = true;
+      }
+      else{
+        text += "\n Couldn't perform animation";
+      }
+    }
+    if(this.gui.isKeyPressed("KeyP")){
+      text += " P ";
+      keysPressed = true;
+      if(this.fKeysPressed){
+        this.bee.waitingForP = true;
+        this.bee.speedVector = this.bee.previousSpeedVector;
+        this.fKeysPressed = false;
+      }
+    }
     if (keysPressed)
       console.log(text);
-  }  
+  }
   initLights() {
-    this.lights[0].setPosition(15, 0, 5, 1);
+    this.lights[0].setPosition(15, 70, 5, 1);
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
     this.lights[0].enable();
     this.lights[0].update();
@@ -175,6 +220,7 @@ export class MyScene extends CGFscene {
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.setShininess(10.0);
   }
+
   display() {
     
     // ---- BEGIN Background, camera and axis setup
@@ -190,35 +236,56 @@ export class MyScene extends CGFscene {
     // Draw axis
     if (this.displayAxis) this.axis.display();
 
-/*  // Panorama
+    
+    // Panorama
     this.pushMatrix();
     this.skybox.apply();
     this.rotate(Math.PI, 1, 0,0);
     this.panorama.display();
     this.popMatrix();
+
+    // Plane
+    this.pushMatrix();
+    this.planeAppearance.apply();
+    this.translate(0, -1, 0);
+    this.scale(100, 1, 100);
+    this.rotate(-Math.PI/2, 1, 0, 0);
+    this.plane.display();
+    this.popMatrix();
     
     // ---- BEGIN Primitive drawing section
 
-    // Plane
-    /*this.pushMatrix();
-    this.appearance.apply();
-    this.translate(0,-100,0);
-    this.scale(400,400,400);
-    this.rotate(-Math.PI/2.0,1,0,0);
-    this.plane.display();
+    this.pushMatrix();
+    this.setActiveShader(this.grassShader);
+    this.grass.display();
+    this.popMatrix();
+
+    this.pushMatrix();
+    this.setActiveShader(this.defaultShader);
+    this.rockSpawn.display();
     this.popMatrix();
 
     // Flowers
-    /*this.pushMatrix();
-    this.translate(-50, -50, -50);
-    this.garden.display();
-    this.popMatrix();*/
-    
-    // Bee
     this.pushMatrix();
+    this.garden.display();
+    this.popMatrix();
+
+    // Hive
+    this.pushMatrix();
+    this.hive.display();
+    this.popMatrix();
+
+    this.pushMatrix(); 
+    this.scale(2,2,2);
+    this.translate(10, 0, 0);
+    this.rockSet.display();
+    this.popMatrix();
+
+    // Bee
+    /*this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     this.bee.display();
-    this.popMatrix();
+    this.popMatrix();*/
 
     // ---- END Primitive drawing section
   }
