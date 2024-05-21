@@ -124,7 +124,7 @@ export class MyScene extends CGFscene {
 
       if(this.oKeyPressed){
         var distanceToTarget = Math.sqrt(Math.pow(this.bee.x - this.hive.x, 2) + Math.pow(this.bee.y - (this.hive.y+2), 2) + Math.pow(this.bee.z - this.hive.z, 2));
-        if(distanceToTarget <= 0.1){
+        if(distanceToTarget < 0.1){
           this.hive.updateThisCurrPollenAdd();
           this.oKeyPressed = false;
         }
