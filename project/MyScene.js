@@ -112,8 +112,6 @@ export class MyScene extends CGFscene {
   {
       this.checkKeys();
 
-      //this.grassShader.setUniformsValues({uTime: t/100 % (2*Math.PI)});
-
       // Update without considering time - BAD
       this.animVal1+=0.1;
 
@@ -129,11 +127,15 @@ export class MyScene extends CGFscene {
       //#endregion
       //#endregion
 
-      var distanceToTarget = Math.sqrt(Math.pow(this.bee.x - this.hive.x, 2) + Math.pow(this.bee.y - (this.hive.y+2), 2) + Math.pow(this.bee.z - this.hive.z, 2));
-      if(this.oKeyPressed && distanceToTarget < 0.01){
-        this.hive.updateThisCurrPollenAdd();
-        this.oKeyPressed = false;
+      if(this.oKeyPressed){
+        var distanceToTarget = Math.sqrt(Math.pow(this.bee.x - this.hive.x, 2) + Math.pow(this.bee.y - (this.hive.y+2), 2) + Math.pow(this.bee.z - this.hive.z, 2));
+        if(distanceToTarget <= 0.1){
+          this.hive.updateThisCurrPollenAdd();
+          this.oKeyPressed = false;
+        }
       }
+
+      this.grassShader.setUniformsValues({uTime: t/100 % (2*Math.PI)});
   }
   checkKeys() {
     var text = "Keys pressed: ";
@@ -245,13 +247,23 @@ export class MyScene extends CGFscene {
     // Plane
     this.pushMatrix();
     this.planeAppearance.apply();
-    this.translate(0, -0.1, 0);
+    this.translate(0, -1, 0);
     this.scale(100, 1, 100);
     this.rotate(-Math.PI/2, 1, 0, 0);
     this.plane.display();
     this.popMatrix();
     
     // ---- BEGIN Primitive drawing section
+
+    this.pushMatrix();
+    this.setActiveShader(this.grassShader);
+    this.grass.display();
+    this.popMatrix();
+
+    this.pushMatrix();
+    this.setActiveShader(this.defaultShader);
+    this.rockSpawn.display();
+    this.popMatrix();
 
     // Flowers
     this.pushMatrix();
@@ -262,16 +274,6 @@ export class MyScene extends CGFscene {
     this.pushMatrix();
     this.hive.display();
     this.popMatrix();
-      
-    this.pushMatrix();
-    this.setActiveShader(this.grassShader);
-    this.grass.display();
-    this.popMatrix();
-    
-    this.pushMatrix();
-    this.setActiveShader(this.defaultShader);
-    this.rockSpawn.display();
-    this.popMatrix();
 
     this.pushMatrix(); 
     this.scale(2,2,2);
@@ -280,10 +282,10 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     // Bee
-    this.pushMatrix();
+    /*this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     this.bee.display();
-    this.popMatrix();
+    this.popMatrix();*/
 
     // ---- END Primitive drawing section
   }

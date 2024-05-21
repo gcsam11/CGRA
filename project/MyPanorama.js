@@ -4,8 +4,8 @@ export class MyPanorama extends CGFobject {
     constructor(scene, radius, slices, stacks) {
         super(scene);
         this.radius = radius || 1.0;
-        this.slices = slices || 50; // Number of horizontal slices
-        this.stacks = stacks || 50; // Number of vertical stacks
+        this.slices = slices || 20; // Number of horizontal slices
+        this.stacks = stacks || 5; // Number of vertical stacks
         this.initBuffers();
     }
 

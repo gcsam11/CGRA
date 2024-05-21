@@ -5,7 +5,7 @@ export class MyGarden extends CGFobject {
     constructor(scene, leafColor, stacks, slices){
         super(scene);
         this.slices = slices || 20;
-        this.stacks = stacks || 20;
+        this.stacks = stacks || 5;
         this.radius = 0.05;
         this.leafColor = leafColor;
         this.material = new CGFappearance(this.scene);

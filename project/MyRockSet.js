@@ -5,7 +5,7 @@ export class MyRockSet extends CGFobject {
     constructor(scene, stacks, slices){
         super(scene);
         this.slices = slices || 20;
-        this.stacks = stacks || 20;
+        this.stacks = stacks || 5;
         this.radius = 0.6;
         this.rock = new MyRock(this.scene, this.radius, this.slices, this.stacks);
         this.material = new CGFappearance(this.scene);

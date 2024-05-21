@@ -4,7 +4,7 @@ import { MyGrassBlade } from './MyGrassBlade.js';
 export class MyGrass extends CGFobject {
     constructor(scene, grassBlades){
         super(scene);
-        this.grassBlades = grassBlades || 100;
+        this.grassBlades = grassBlades || 200;
         this.positions = [];
         this.sizes = [];
 

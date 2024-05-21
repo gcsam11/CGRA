@@ -5,7 +5,7 @@ export class MySphere extends CGFobject {
         super(scene);
         this.radius = radius || 1.0;
         this.slices = slices || 20; // Number of horizontal slices
-        this.stacks = stacks || 20; // Number of vertical stacks
+        this.stacks = stacks || 5; // Number of vertical stacks
         this.initBuffers();
     }
 
