@@ -1,4 +1,4 @@
-import { CGFappearance, CGFobject } from '../../lib/CGF.js';
+import { CGFappearance, CGFobject, CGFtexture } from '../../lib/CGF.js';
 
 export class MyPetal extends CGFobject {
     constructor(scene, upperAngle, lowerAngle, height, color) {
@@ -7,7 +7,14 @@ export class MyPetal extends CGFobject {
         this.lowerAngle = lowerAngle;
         this.height = height;
         this.color = color;
-        this.material = new CGFappearance(this.scene);
+        this.petalTexture = new CGFtexture(this.scene, 'textures/grassblade.png');
+        this.petalMaterial = new CGFappearance(this.scene);
+        this.petalMaterial.setTexture(this.petalTexture);
+        this.petalMaterial.setTextureWrap('REPEAT', 'REPEAT');
+        this.petalMaterial.setAmbient(...this.color);
+        this.petalMaterial.setDiffuse(...this.color);
+        this.petalMaterial.setSpecular(...this.color);
+        this.petalMaterial.setShininess(10.0);
         this.initBuffers();
     }
 
@@ -109,20 +116,30 @@ export class MyPetal extends CGFobject {
         this.normals.push(...normal2_back);
         this.normals.push(...normal2_back);
         this.normals.push(...normal2_back);
+
+        this.texCoords = [
+            0, 1,    //0
+            1, 1,    //1
+            0.5, 0,  //2
+            0, 1,    //3
+            1, 1,    //4
+            0.5, 0,  //5
+            0, 1,    //6
+            1, 1,    //7
+            0.5, 0,  //8
+            0, 1,    //9
+            1, 1,    //10
+            0.5, 0,  //11
+        ];
        
         this.primitiveType = this.scene.gl.TRIANGLES;
-
-        this.material.setAmbient(...this.color);
-        this.material.setDiffuse(...this.color);
-        this.material.setSpecular(...this.color);
-        this.material.setShininess(10.0);
     
         this.initGLBuffers();
         
     }
 
     display(){
-        this.material.apply();
+        this.petalMaterial.apply();
         super.display();
     }
 }

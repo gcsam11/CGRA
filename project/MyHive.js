@@ -4,7 +4,7 @@ import { MyPollen } from './MyPollen.js'
 
 
 export class MyHive extends CGFobject {
-    constructor(scene, currPollen) {
+    constructor(scene, currPollen, x=20, y=7, z=0) {
         super(scene);
 
         this.currPollen = currPollen;
@@ -20,17 +20,20 @@ export class MyHive extends CGFobject {
         this.cubeTop = new MyUnitCubeQuad(this.scene, this.bottom, this.bottom, this.bottom, this.bottom, this.top, this.bottom);
         this.pollen = new MyPollen(this.scene);
 
+        this.x = x;
+        this.y = y;
+        this.z = z;
+
         this.pollenPositions = [];
         for(var i = 0; i < this.currPollen; i++){
             var x = this.getRandomInt(-3.5, 3.5);
             var z = this.getRandomInt(-3.5, 3.5);
             this.pollenPositions.push({x: x, z: z});
         }
-
     }
 
-    updateThisCurrPollen(n){
-        this.currPollen = n;
+    updateThisCurrPollenAdd(){
+        this.currPollen += 1;
         this.pollenPositions.push({x: this.getRandomInt(-3.5, 3.5), z: this.getRandomInt(-3.5, 3.5)});
     }
 
@@ -42,9 +45,7 @@ export class MyHive extends CGFobject {
 
     display() {
         this.scene.pushMatrix();
-        this.scene.translate(0, 14, 0);
-        this.cube.display();
-        this.scene.popMatrix();
+        this.scene.translate(this.x, 0, this.z);
 
         this.scene.pushMatrix();
         this.scene.translate(0, 7, 0);
@@ -52,7 +53,7 @@ export class MyHive extends CGFobject {
         this.scene.popMatrix();
 
         this.scene.pushMatrix();
-        this.scene.translate(0, 14, 0);
+        this.scene.translate(0, 7, 0);
         this.scene.scale(1.1, 0.2, 1.1);
         this.cubeTop.display();
         this.scene.popMatrix();
@@ -60,10 +61,12 @@ export class MyHive extends CGFobject {
         for(var i = 0; i < this.currPollen; i++){
             this.scene.pushMatrix();
             var pos = this.pollenPositions[i];
-            this.scene.translate(pos.x, 14, pos.z);
+            this.scene.translate(pos.x, 7, pos.z);
             this.scene.scale(0.25, 0.25, 0.25);
             this.pollen.display();
             this.scene.popMatrix();
         }
+
+        this.scene.popMatrix();
     }
 }

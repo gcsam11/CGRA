@@ -1,4 +1,4 @@
-import { CGFappearance, CGFobject} from '../../lib/CGF.js';
+import { CGFappearance, CGFobject, CGFtexture} from '../../lib/CGF.js';
 
 export class MyStem extends CGFobject {
     constructor(scene, radius, color, leafcolor, height, stacks, slices){
@@ -9,7 +9,14 @@ export class MyStem extends CGFobject {
         this.height = height;
         this.color = color;
         this.leafcolor = leafcolor;
-        this.material = new CGFappearance(this.scene);
+        this.stemTexture = new CGFtexture(this.scene, 'textures/grassblade.png');
+        this.stemMaterial = new CGFappearance(this.scene);
+        this.stemMaterial.setTexture(this.stemTexture);
+        this.stemMaterial.setTextureWrap('REPEAT', 'REPEAT');
+        this.stemMaterial.setAmbient(...this.color);
+        this.stemMaterial.setDiffuse(...this.color);
+        this.stemMaterial.setSpecular(...this.color);
+        this.stemMaterial.setShininess(10.0);
         this.initBuffers();
     }
 
@@ -17,6 +24,7 @@ export class MyStem extends CGFobject {
         this.vertices = [];
         this.indices = [];
         this.normals = [];
+        this.texCoords = [];
 
         var ang = 0;
         var alphaAng = 2*Math.PI/this.slices;
@@ -48,14 +56,15 @@ export class MyStem extends CGFobject {
                 this.normals.push(caa, saa, 0);
                 this.normals.push(caa, saa, 0);
 
+                // Define texture coordinates
+                this.texCoords.push(i / this.slices, j / this.stacks);
+                this.texCoords.push(i / this.slices, (j + 1) / this.stacks);
+                this.texCoords.push((i + 1) / this.slices, j / this.stacks);
+                this.texCoords.push((i + 1) / this.slices, (j + 1) / this.stacks);
+
                 ang+=alphaAng;
             }
         }
-
-        this.material.setAmbient(...this.color);
-        this.material.setDiffuse(...this.color);
-        this.material.setSpecular(...this.color);
-        this.material.setShininess(10.0);
 
         this.primitiveType = this.scene.gl.TRIANGLES;
 
@@ -63,7 +72,7 @@ export class MyStem extends CGFobject {
     }
 
     display(){
-        this.material.apply();
+        this.stemMaterial.apply();
         super.display();
     }
 }
