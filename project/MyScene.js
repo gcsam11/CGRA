@@ -1,6 +1,7 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyPanorama } from "./MyPanorama.js";
+import { MySky } from "./MySky.js";
 import { MySphere } from "./MySphere.js";
 import { MyGarden } from "./myGarden.js";
 import { MyFlower } from "./Flowers/MyFlower.js";
@@ -58,7 +59,7 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
-    this.panorama = new MyPanorama(this, 200);
+    this.panorama = new MySky(this);
     this.sphere = new MySphere(this, 30);
     this.garden = new MyGarden(this);
     this.flower = new MyFlower(this);
@@ -87,12 +88,6 @@ export class MyScene extends CGFscene {
 
     //Textures
     this.enableTextures(true);
-
-    // Panorama Texture
-    this.sky = new CGFtexture(this, "textures/panorama2.jpg");
-    this.skybox = new CGFappearance(this);
-    this.skybox.setTexture(this.sky);
-    this.skybox.setTextureWrap('REPEAT', 'REPEAT');
 
     // Plane Texture
     this.planeTexture = new CGFtexture(this,  "textures/grassGroundII.jpg");
@@ -124,13 +119,14 @@ export class MyScene extends CGFscene {
 
       if(this.oKeyPressed){
         var distanceToTarget = Math.sqrt(Math.pow(this.bee.x - this.hive.x, 2) + Math.pow(this.bee.y - (this.hive.y+2), 2) + Math.pow(this.bee.z - this.hive.z, 2));
-        if(distanceToTarget <= 0.1){
+        if(distanceToTarget < 0.1){
           this.hive.updateThisCurrPollenAdd();
           this.oKeyPressed = false;
         }
       }
 
       this.grassShader.setUniformsValues({uTime: t/100 % (2*Math.PI)});
+      this.panorama.update(timeSinceAppStart);
   }
   checkKeys() {
     var text = "Keys pressed: ";
@@ -231,13 +227,8 @@ export class MyScene extends CGFscene {
     // Draw axis
     if (this.displayAxis) this.axis.display();
 
-    
-    // Panorama
-    this.pushMatrix();
-    this.skybox.apply();
-    this.rotate(Math.PI, 1, 0,0);
+    //Panorama
     this.panorama.display();
-    this.popMatrix();
 
     // Plane
     this.pushMatrix();
