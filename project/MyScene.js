@@ -99,6 +99,11 @@ export class MyScene extends CGFscene {
     this.skybox.setTexture(this.sky);
     this.skybox.setTextureWrap('REPEAT', 'REPEAT');
 
+    // Plane Texture
+    this.planeTexture = new CGFtexture(this, "textures/terrain.jpg");
+    this.planeAppearance = new CGFappearance(this);
+    this.planeAppearance.setTexture(this.planeTexture);
+    this.planeAppearance.setTextureWrap('REPEAT', 'REPEAT');
   }
   updateSpeedFactor(){
     this.bee.updateSpeedFactor(this.speedFactor);
@@ -106,6 +111,9 @@ export class MyScene extends CGFscene {
   update(t)
   {
       this.checkKeys();
+
+      //this.grassShader.setUniformsValues({uTime: t/100 % (2*Math.PI)});
+
       // Update without considering time - BAD
       this.animVal1+=0.1;
 
@@ -211,10 +219,6 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
-  update(t) {
-    this.grassShader.setUniformsValues({uTime: t/100 % (2*Math.PI)});
-  }
-
   display() {
     
     // ---- BEGIN Background, camera and axis setup
@@ -230,17 +234,22 @@ export class MyScene extends CGFscene {
     // Draw axis
     if (this.displayAxis) this.axis.display();
 
+    
     // Panorama
-    /*this.pushMatrix();
-    this.eyeball.apply();
-    this.sphere.display();
-    this.popMatrix();*/
-
-    /*this.pushMatrix();
+    this.pushMatrix();
     this.skybox.apply();
     this.rotate(Math.PI, 1, 0,0);
     this.panorama.display();
-    this.popMatrix();*/
+    this.popMatrix();
+
+    // Plane
+    this.pushMatrix();
+    this.planeAppearance.apply();
+    this.translate(0, -0.1, 0);
+    this.scale(100, 1, 100);
+    this.rotate(-Math.PI/2, 1, 0, 0);
+    this.plane.display();
+    this.popMatrix();
     
     // ---- BEGIN Primitive drawing section
 
@@ -253,20 +262,20 @@ export class MyScene extends CGFscene {
     this.pushMatrix();
     this.hive.display();
     this.popMatrix();
-    
-    // Hive
+      
     this.pushMatrix();
-    this.hive.display();
-    this.popMatrix();
-  
-    //this.flower.display();
     this.setActiveShader(this.grassShader);
     this.grass.display();
+    this.popMatrix();
+    
+    this.pushMatrix();
     this.setActiveShader(this.defaultShader);
     this.rockSpawn.display();
+    this.popMatrix();
 
     this.pushMatrix(); 
     this.scale(2,2,2);
+    this.translate(10, 0, 0);
     this.rockSet.display();
     this.popMatrix();
 
@@ -275,7 +284,6 @@ export class MyScene extends CGFscene {
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     this.bee.display();
     this.popMatrix();
-
 
     // ---- END Primitive drawing section
   }
