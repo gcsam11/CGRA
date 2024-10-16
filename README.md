@@ -14,3 +14,5 @@
   - [tp4](tp4/README.md)
   - [tp5](tp5/README.md)
   - [Project](project/README.md)
+
+To run the project, use the Live Server plugin on Virtual Studio Code, or open `index.html` in an HTTP Server.
